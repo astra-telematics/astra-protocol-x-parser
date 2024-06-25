@@ -1,0 +1,16 @@
+{
+  "name": "astra-protocol-x-parser",
+  "private": true,
+  "scripts": {
+    "compile": "rm -rf dist/lib && tsc && tsc --build tsconfig.es5.json",
+    "preparepackage": "rm dist/README.md && cp README.md dist/README.md"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.8",
+    "typescript": "^5.5.2"
+  },
+  "dependencies": {
+    "binutils64": "^0.1.2",
+    "crc": "^4.3.2"
+  }
+}

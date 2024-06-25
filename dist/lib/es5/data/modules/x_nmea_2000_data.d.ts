@@ -1,0 +1,31 @@
+export declare class ProtocolXNmea2000Data {
+    static mask: bigint;
+    fuelLevelPercent: number;
+    oilLevelPercent: number;
+    stateOfChargePercent: number;
+    stateOfHealthPercent: number;
+    batteryCapacity: number;
+    chargerEnableDisable: number;
+    timeToEmpty: number;
+    distanceToEmpty: number;
+    tripRunTime: number;
+    tripFuelUsed: number;
+    engineOilPressurePa: number;
+    engineOilTemperatureDegK: number;
+    engineTemperatureDegK: number;
+    alternatorVoltageMv: number;
+    fuelRateM3h: number;
+    totalEngineHours: number;
+    engineCoolantPressure: number;
+    fuelPressure: number;
+    engineDiscreteStatus1: number;
+    engineDiscreteStatus2: number;
+    engineLoadPercent: number;
+    engineTorquePercent: number;
+    waterDepthAtTransducerM: number;
+    waterDepthTransducerOffsetM: number;
+    windSpeedMps: number;
+    airTemperatureDegK: number;
+    reserved: Buffer;
+    constructor(fuelLevelPercent: number, oilLevelPercent: number, stateOfChargePercent: number, stateOfHealthPercent: number, batteryCapacity: number, chargerEnableDisable: number, timeToEmpty: number, distanceToEmpty: number, tripRunTime: number, tripFuelUsed: number, engineOilPressurePa: number, engineOilTemperatureDegK: number, engineTemperatureDegK: number, alternatorVoltageMv: number, fuelRateM3h: number, totalEngineHours: number, engineCoolantPressure: number, fuelPressure: number, engineDiscreteStatus1: number, engineDiscreteStatus2: number, engineLoadPercent: number, engineTorquePercent: number, waterDepthAtTransducerM: number, waterDepthTransducerOffsetM: number, windSpeedMps: number, airTemperatureDegK: number, reserved: Buffer);
+}
