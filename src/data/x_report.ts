@@ -1,3 +1,4 @@
+import * as moment from "moment";
 import { readU16BE, readU24, readU32BE } from "../utils";
 import { ProtocolXAnalogues } from "./modules/x_analogues";
 import { ProtocolXAskollEs2ScooterData } from "./modules/x_askoll_es2_scooter_data";
@@ -53,7 +54,7 @@ import { ProtocolXTrailerIdSource } from "./x_trailer_id_source";
 
 export class ProtocolXReport
 {
-    public timestamp?: Date;
+    public timestamp?: moment.Moment;
     public sequenceNumber?: number;
     public reasons: ProtocolXReason[] = [];
     public statusFlags?: number;
@@ -122,8 +123,7 @@ export class ProtocolXReport
         }
 
         let julianSecs = reader.ReadUInt32();
-        report.timestamp = new Date(Date.parse('1980-01-06T00:00:00+0000'));
-        report.timestamp.setSeconds(report.timestamp.getSeconds() + julianSecs);
+        report.timestamp = moment.utc('1980-01-06T00:00:00').add(julianSecs, 'seconds');
 
         let reasonFlags = reader.ReadUInt32();
         
@@ -687,8 +687,7 @@ export class ProtocolXReport
         if ((moduleMask & ProtocolXAskollEs2ScooterData.mask) === ProtocolXAskollEs2ScooterData.mask)
         {
             let julianSecs = reader.ReadUInt32();
-            let timestamp = new Date(Date.parse('1980-01-06T00:00:00+0000'));
-            timestamp.setSeconds(timestamp.getSeconds() + julianSecs);
+            let timestamp = moment.utc('1980-01-06T00:00:00').add(julianSecs, 'seconds');
             report.askollEs2ScooterData = new ProtocolXAskollEs2ScooterData(
                 timestamp,
                 reader.ReadUInt8(),
@@ -783,8 +782,7 @@ export class ProtocolXReport
                 reader.ReadUInt16()
             )
             let julianSecs = reader.ReadUInt32();
-            let timestamp = new Date(Date.parse('1980-01-06T00:00:00+0000'));
-            timestamp.setSeconds(timestamp.getSeconds() + julianSecs);
+            let timestamp = moment.utc('1980-01-06T00:00:00').add(julianSecs, 'seconds');
             report.starsAcimMotorControllerData.canEventDateTime = timestamp;
             // skip reserved bytes
             reader.ReadBytes(4);
@@ -802,8 +800,7 @@ export class ProtocolXReport
                 reader.ReadUInt16()
             )
             let julianSecs = reader.ReadUInt32();
-            let timestamp = new Date(Date.parse('1980-01-06T00:00:00+0000'));
-            timestamp.setSeconds(timestamp.getSeconds() + julianSecs);
+            let timestamp = moment.utc('1980-01-06T00:00:00').add(julianSecs, 'seconds');
             report.car2Data.canEventDateTime = timestamp;
             report.car2Data.reserved = reader.ReadBytes(8);
         }

@@ -1,8 +1,10 @@
+import * as moment from "moment";
+
 export class ProtocolXAskollEs2ScooterData
 {
     static mask: bigint = BigInt(1) << BigInt(37);
 
-    public canEventDateTime: Date;
+    public canEventDateTime: moment.Moment;
     public battery1SocPercent: number;
     public battery2SocPercent: number;
     public battery1SerialNumber: number;
@@ -24,7 +26,7 @@ export class ProtocolXAskollEs2ScooterData
     public gnssEstimatedPositionErrorM: number;
 
     constructor (
-        canEventDateTime: Date,
+        canEventDateTime: moment.Moment,
         battery1SocPercent: number,
         battery2SocPercent: number,
         battery1SerialNumber: number,

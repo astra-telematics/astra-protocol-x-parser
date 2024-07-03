@@ -1,3 +1,4 @@
+import * as moment from "moment";
 import { ProtocolXAnalogues } from "./modules/x_analogues";
 import { ProtocolXAskollEs2ScooterData } from "./modules/x_askoll_es2_scooter_data";
 import { ProtocolXAstraGenericCanData } from "./modules/x_astra_generic_can_data";
@@ -47,7 +48,7 @@ import { ProtocolXTrailerId } from "./modules/x_trailer_id";
 import { ProtocolXReason } from "./x_reason";
 import { ProtocolXReportStatus } from "./x_report_status";
 export declare class ProtocolXReport {
-    timestamp?: Date;
+    timestamp?: moment.Moment;
     sequenceNumber?: number;
     reasons: ProtocolXReason[];
     statusFlags?: number;

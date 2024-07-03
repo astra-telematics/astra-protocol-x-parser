@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProtocolXReport = void 0;
+var moment = require("moment");
 var utils_1 = require("../utils");
 var x_analogues_1 = require("./modules/x_analogues");
 var x_askoll_es2_scooter_data_1 = require("./modules/x_askoll_es2_scooter_data");
@@ -67,8 +68,7 @@ var ProtocolXReport = /** @class */ (function () {
                 moduleMask <<= BigInt(8);
         }
         var julianSecs = reader.ReadUInt32();
-        report.timestamp = new Date(Date.parse('1980-01-06T00:00:00+0000'));
-        report.timestamp.setSeconds(report.timestamp.getSeconds() + julianSecs);
+        report.timestamp = moment.utc('1980-01-06T00:00:00').add(julianSecs, 'seconds');
         var reasonFlags = reader.ReadUInt32();
         for (var i = 0; i < x_reason_labels_1.ProtocolXReasonLabel.COUNT; i++) {
             var mask = 1 << i;
@@ -295,8 +295,7 @@ var ProtocolXReport = /** @class */ (function () {
         // ASKOLL ES2 SCOOTER DATA
         if ((moduleMask & x_askoll_es2_scooter_data_1.ProtocolXAskollEs2ScooterData.mask) === x_askoll_es2_scooter_data_1.ProtocolXAskollEs2ScooterData.mask) {
             var julianSecs_1 = reader.ReadUInt32();
-            var timestamp = new Date(Date.parse('1980-01-06T00:00:00+0000'));
-            timestamp.setSeconds(timestamp.getSeconds() + julianSecs_1);
+            var timestamp = moment.utc('1980-01-06T00:00:00').add(julianSecs_1, 'seconds');
             report.askollEs2ScooterData = new x_askoll_es2_scooter_data_1.ProtocolXAskollEs2ScooterData(timestamp, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadInt8(), reader.ReadUInt16() * 100, reader.ReadUInt8() * 100, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt32() * 100, reader.ReadUInt16() * 100, reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() * 10, reader.ReadUInt16(), reader.ReadUInt8() * 0.1, reader.ReadUInt8());
             // skip reserved bytes
             reader.ReadBytes(2);
@@ -317,8 +316,7 @@ var ProtocolXReport = /** @class */ (function () {
         if ((moduleMask & x_stars_acim_motor_controller_data_1.ProtocolXStarsAcimMotorControllerData.mask) === x_stars_acim_motor_controller_data_1.ProtocolXStarsAcimMotorControllerData.mask) {
             report.starsAcimMotorControllerData = new x_stars_acim_motor_controller_data_1.ProtocolXStarsAcimMotorControllerData(reader.ReadInt16(), reader.ReadInt16(), reader.ReadInt16(), reader.ReadInt16(), reader.ReadInt16(), reader.ReadInt16(), reader.ReadInt16() / 100, reader.ReadUInt8(), reader.ReadInt16() / 100, reader.ReadInt16() / 100, reader.ReadInt16(), reader.ReadInt16(), reader.ReadUInt8(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16());
             var julianSecs_2 = reader.ReadUInt32();
-            var timestamp = new Date(Date.parse('1980-01-06T00:00:00+0000'));
-            timestamp.setSeconds(timestamp.getSeconds() + julianSecs_2);
+            var timestamp = moment.utc('1980-01-06T00:00:00').add(julianSecs_2, 'seconds');
             report.starsAcimMotorControllerData.canEventDateTime = timestamp;
             // skip reserved bytes
             reader.ReadBytes(4);
@@ -327,8 +325,7 @@ var ProtocolXReport = /** @class */ (function () {
         if ((moduleMask & x_car2_data_1.ProtocolXCar2Data.mask) === x_car2_data_1.ProtocolXCar2Data.mask) {
             report.car2Data = new x_car2_data_1.ProtocolXCar2Data(reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16());
             var julianSecs_3 = reader.ReadUInt32();
-            var timestamp = new Date(Date.parse('1980-01-06T00:00:00+0000'));
-            timestamp.setSeconds(timestamp.getSeconds() + julianSecs_3);
+            var timestamp = moment.utc('1980-01-06T00:00:00').add(julianSecs_3, 'seconds');
             report.car2Data.canEventDateTime = timestamp;
             report.car2Data.reserved = reader.ReadBytes(8);
         }

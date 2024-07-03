@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "binutils64": "^0.1.2",
-    "crc": "^4.3.2"
+    "crc": "^4.3.2",
+    "moment": "^2.30.1",
+    "moment-timezone": "^0.5.45"
   }
 }

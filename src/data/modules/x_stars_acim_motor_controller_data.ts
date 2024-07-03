@@ -1,3 +1,5 @@
+import * as moment from "moment";
+
 export class ProtocolXStarsAcimMotorControllerData
 {
     static mask: bigint = BigInt(1) << BigInt(41);
@@ -20,7 +22,7 @@ export class ProtocolXStarsAcimMotorControllerData
     public error0Status: number;
     public error1Status: number;
     public error2Status: number;
-    public canEventDateTime?: Date;
+    public canEventDateTime?: moment.Moment;
 
     constructor (
          rpmLeft: number,

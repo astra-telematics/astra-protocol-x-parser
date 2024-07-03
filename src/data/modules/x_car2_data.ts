@@ -1,3 +1,5 @@
+import * as moment from "moment";
+
 export class ProtocolXCar2Data
 {
     static mask: bigint = BigInt(1) << BigInt(42);
@@ -8,7 +10,7 @@ export class ProtocolXCar2Data
     public brakePosition: number;
     public status: number;
     public faults: number;
-    public canEventDateTime?: Date;
+    public canEventDateTime?: moment.Moment;
     public reserved?: Buffer;
 
     constructor (

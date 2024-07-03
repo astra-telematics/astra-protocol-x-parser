@@ -69,6 +69,10 @@ let server = net.createServer((c) => {
         console.log('client disconnected');
     });
 
+    c.on('error', (e) => {
+        console.log('client socket error', e);
+    });
+
     c.on('data', (data) => {
         console.log(data.length+' bytes rxd');
 
