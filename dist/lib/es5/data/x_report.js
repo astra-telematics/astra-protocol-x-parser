@@ -128,16 +128,16 @@ var ProtocolXReport = /** @class */ (function () {
             var src = x_driver_id_source_1.ProtocolXDriverIdSource.NONE;
             switch (reader.ReadUInt8()) {
                 case 1:
-                    x_driver_id_source_1.ProtocolXDriverIdSource.IBUTTON;
+                    src = x_driver_id_source_1.ProtocolXDriverIdSource.IBUTTON;
                     break;
                 case 2:
-                    x_driver_id_source_1.ProtocolXDriverIdSource.RFID;
+                    src = x_driver_id_source_1.ProtocolXDriverIdSource.RFID;
                     break;
                 case 3:
-                    x_driver_id_source_1.ProtocolXDriverIdSource.BLUETOOTH;
+                    src = x_driver_id_source_1.ProtocolXDriverIdSource.BLUETOOTH;
                     break;
                 case 4:
-                    x_driver_id_source_1.ProtocolXDriverIdSource.CR002_CARD_READER;
+                    src = x_driver_id_source_1.ProtocolXDriverIdSource.CR002_CARD_READER;
                     break;
             }
             report.driverId = new x_driver_id_1.ProtocolXDriverId(src, reader.ReadBytes(8).toString('hex').toUpperCase());

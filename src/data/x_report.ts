@@ -241,16 +241,16 @@ export class ProtocolXReport
             switch (reader.ReadUInt8())
             {
                 case 1:
-                    ProtocolXDriverIdSource.IBUTTON;
+                    src = ProtocolXDriverIdSource.IBUTTON;
                     break;
                 case 2:
-                    ProtocolXDriverIdSource.RFID;
+                    src = ProtocolXDriverIdSource.RFID;
                     break;
                 case 3:
-                    ProtocolXDriverIdSource.BLUETOOTH;
+                    src = ProtocolXDriverIdSource.BLUETOOTH;
                     break;
                 case 4:
-                    ProtocolXDriverIdSource.CR002_CARD_READER;
+                    src = ProtocolXDriverIdSource.CR002_CARD_READER;
                     break;
             }
             report.driverId = new ProtocolXDriverId(
