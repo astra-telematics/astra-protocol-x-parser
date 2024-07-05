@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProtocolXReport = void 0;
-var moment = require("moment");
+var moment = require("moment-timezone");
 var utils_1 = require("../utils");
 var x_analogues_1 = require("./modules/x_analogues");
 var x_askoll_es2_scooter_data_1 = require("./modules/x_askoll_es2_scooter_data");
@@ -68,7 +68,7 @@ var ProtocolXReport = /** @class */ (function () {
                 moduleMask <<= BigInt(8);
         }
         var julianSecs = reader.ReadUInt32();
-        report.timestamp = moment.utc('1980-01-06T00:00:00').add(julianSecs, 'seconds');
+        report.timestamp = moment.tz('1980-01-06T00:00:00', 'UTC').add(julianSecs, 'seconds');
         var reasonFlags = reader.ReadUInt32();
         for (var i = 0; i < x_reason_labels_1.ProtocolXReasonLabel.COUNT; i++) {
             var mask = 1 << i;

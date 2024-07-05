@@ -1,4 +1,4 @@
-import * as moment from "moment";
+import * as moment from "moment-timezone";
 import { readU16BE, readU24, readU32BE } from "../utils";
 import { ProtocolXAnalogues } from "./modules/x_analogues";
 import { ProtocolXAskollEs2ScooterData } from "./modules/x_askoll_es2_scooter_data";
@@ -123,7 +123,7 @@ export class ProtocolXReport
         }
 
         let julianSecs = reader.ReadUInt32();
-        report.timestamp = moment.utc('1980-01-06T00:00:00').add(julianSecs, 'seconds');
+        report.timestamp = moment.tz('1980-01-06T00:00:00', 'UTC').add(julianSecs, 'seconds');
 
         let reasonFlags = reader.ReadUInt32();
         
