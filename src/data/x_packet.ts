@@ -1,5 +1,7 @@
+import * as moment from "moment";
 import { astraCrc } from "../crc";
 import { ProtocolXReport } from "./x_report";
+import * as luhn from "luhn";
 
 const binutils = require('binutils64');
 
@@ -8,6 +10,7 @@ export class ProtocolXPacket
     constructor(){}
 
     private length?: number;
+    public mode4Imei?: string;
     public reports: ProtocolXReport[] = [];
 
     static fromData (data: Buffer): ProtocolXPacket | null
@@ -23,6 +26,46 @@ export class ProtocolXPacket
             packet.length = reader.ReadUInt16();
             // number of reports
             let numReports = reader.ReadUInt8();
+
+            let isMode4 = false;
+
+            // look for a valid imei and run sanity checks to determine mode 4/6
+            let tacFac = data.readUint32BE(4);
+            let msnCd = data.readUint8(8);
+            msnCd <<= 8;
+            msnCd |= data.readUint8(9);
+            msnCd <<= 8;
+            msnCd |= data.readUint8(10);
+            
+            let mode4Imei = tacFac.toString()+msnCd.toString();
+
+            if (luhn.validate(mode4Imei))
+            {
+                // this could be a $MODE,4 packet, lets do some extra sanity checks to be certain
+                isMode4 = true;
+
+                // make a new reader
+                let mode4CheckReader = new binutils.BinaryReader(data);
+                // skip to first report assuming $MODE,4
+                mode4CheckReader.ReadBytes(11);
+                // sequence number
+                mode4CheckReader.ReadBytes(1);
+                // module mask
+                mode4CheckReader.ReadBytes(6);
+                // rtc time
+                let julianSecs = mode4CheckReader.ReadUInt32();
+                let rtcTime = moment.tz('1980-01-06T00:00:00', 'UTC').add(julianSecs, 'seconds');
+
+                // check rtc time validity
+                isMode4 = rtcTime.isAfter(moment.utc().subtract(5, 'years')) && rtcTime.isBefore(moment.utc().add(24, 'hours'));
+            }
+
+            if (isMode4)
+            {
+                // this is a $MODE,4 packet, store imei in the packet and skip the bytes
+                packet.mode4Imei = mode4Imei;
+                reader.ReadBytes(7);
+            }
 
             // confirm packet length
             if (packet.length === data.length)

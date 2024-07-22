@@ -56,6 +56,11 @@ Run the following command in the root of your project
 
 `npm i astra-protocol-x-parser`
 
+### Notes
+If you are using the setting $MODE,4 on your device, the device will not send a login packet when it connects and will instead send reports straight away and encode the IMEI within the packet header.
+
+In this case, the IMEI will be available in the ProtocolXPacket object under the mode4Imei property.
+
 ### Basic example
 
 ```js
@@ -80,6 +85,11 @@ let server = net.createServer((c) => {
         {
             let parser = new ProtocolXParser(data);
 
+            /* 
+                By default, devices use $MODE,6 which means they will send a login packet before sening data.
+                If the data received is the login packet, isLogin will be 'true' and details about the device
+                can be accessed under the parser's loginData property
+            */
             if (parser.isLogin)
             {
                 console.log(parser.loginData);
@@ -98,6 +108,17 @@ let server = net.createServer((c) => {
             }
             else if (parser.packet?.reports)
             {
+                /* 
+                    If your device is using $MODE,4 which means it will not send a login packet,
+                    the device's IMEI will be available under the packet's mode4Imei property, othwerwise
+                    it will be undefined.
+
+                    Example:
+                    if (parser.packet.mode4Imei)
+                    {
+                        console.log('device is using $MODE,4, imei: ', parser.packet.mode4Imei);
+                    }
+                */
                 parser.packet.reports.forEach((report) => {
                     console.log(report);
                     /*
