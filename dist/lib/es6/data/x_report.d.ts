@@ -47,6 +47,7 @@ import { ProtocolXTorrotMuviScooterData } from "./modules/x_torrot_muvi_scooter_
 import { ProtocolXTrailerId } from "./modules/x_trailer_id";
 import { ProtocolXReason } from "./x_reason";
 import { ProtocolXReportStatus } from "./x_report_status";
+import { ProtocolXHeinzmannData } from "./modules/x_heinzmann";
 export declare class ProtocolXReport {
     timestamp?: moment.Moment;
     sequenceNumber?: number;
@@ -98,6 +99,7 @@ export declare class ProtocolXReport {
     gnssExtendedData?: ProtocolXGnssExtendedData;
     cm2010MobilityScooterController?: ProtocolXCm2010MobilityScooterController;
     astraGenericCanData?: ProtocolXAstraGenericCanData;
+    heinzmannData?: ProtocolXHeinzmannData;
     astraGenericDebugData?: ProtocolXAstraGenericDebugData;
     constructor();
     static fromReader(reader: any): ProtocolXReport;

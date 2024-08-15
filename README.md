@@ -2,7 +2,7 @@
 An official lightweight NodeJS package for parsing data from Astra Telematics IoT devices.
 This package has been written in TypeScript offering rich code-hinting and type safety.
 
-This package is maintained by Astra Telematics and is currently up-to-date with Protocol X V2.8
+This package is maintained by Astra Telematics and is currently up-to-date with Protocol X V3.0
 
 #### Supports All Data Modules
 - [x] Device Power
@@ -50,6 +50,7 @@ This package is maintained by Astra Telematics and is currently up-to-date with 
 - [x] CM2010 Mobility Scooter Controller Data
 - [x] Astra Generic CAN Data
 - [x] Astra Generic Debug Data
+- [x] Heinzmann E-Scooter CAN Data
 
 ### Installation
 Run the following command in the root of your project

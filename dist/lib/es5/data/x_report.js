@@ -54,6 +54,7 @@ var x_reason_1 = require("./x_reason");
 var x_reason_labels_1 = require("./x_reason_labels");
 var x_report_status_1 = require("./x_report_status");
 var x_trailer_id_source_1 = require("./x_trailer_id_source");
+var x_heinzmann_1 = require("./modules/x_heinzmann");
 var ProtocolXReport = /** @class */ (function () {
     function ProtocolXReport() {
         this.reasons = [];
@@ -352,6 +353,10 @@ var ProtocolXReport = /** @class */ (function () {
             else if (byteCount > 0) {
                 reader.ReadBytes(byteCount);
             }
+        }
+        // HEINZMANN ED-DISPLAY
+        if ((moduleMask & x_heinzmann_1.ProtocolXHeinzmannData.mask) === x_heinzmann_1.ProtocolXHeinzmannData.mask) {
+            report.heinzmannData = new x_heinzmann_1.ProtocolXHeinzmannData(reader.ReadUInt8(), (reader.ReadUInt16() / 1000), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadBytes(2));
         }
         // ASTRA GENERIC DEBUG DATA
         if ((moduleMask & x_astra_generic_debug_data_1.ProtocolXAstraGenericDebugData.mask) === x_astra_generic_debug_data_1.ProtocolXAstraGenericDebugData.mask) {

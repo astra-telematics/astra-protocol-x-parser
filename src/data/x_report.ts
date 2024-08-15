@@ -51,6 +51,7 @@ import { ProtocolXReason } from "./x_reason";
 import { ProtocolXReasonLabel } from "./x_reason_labels";
 import { ProtocolXReportStatus } from "./x_report_status";
 import { ProtocolXTrailerIdSource } from "./x_trailer_id_source";
+import { ProtocolXHeinzmannData } from "./modules/x_heinzmann";
 
 export class ProtocolXReport
 {
@@ -105,6 +106,7 @@ export class ProtocolXReport
     public gnssExtendedData?: ProtocolXGnssExtendedData;
     public cm2010MobilityScooterController?: ProtocolXCm2010MobilityScooterController;
     public astraGenericCanData?: ProtocolXAstraGenericCanData;
+    public heinzmannData?: ProtocolXHeinzmannData;
     public astraGenericDebugData?: ProtocolXAstraGenericDebugData;
     
     constructor(){}
@@ -867,6 +869,18 @@ export class ProtocolXReport
             {
                 reader.ReadBytes(byteCount);
             }
+        }
+
+        // HEINZMANN ED-DISPLAY
+        if ((moduleMask & ProtocolXHeinzmannData.mask) === ProtocolXHeinzmannData.mask)
+        {
+            report.heinzmannData = new ProtocolXHeinzmannData(
+                reader.ReadUInt8(),
+                (reader.ReadUInt16() / 1000),
+                reader.ReadUInt32(),
+                reader.ReadUInt32(),
+                reader.ReadBytes(2)
+            );
         }
 
         // ASTRA GENERIC DEBUG DATA
