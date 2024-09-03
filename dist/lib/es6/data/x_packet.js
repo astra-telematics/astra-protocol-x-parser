@@ -26,7 +26,7 @@ var ProtocolXPacket = /** @class */ (function () {
             msnCd <<= 8;
             msnCd |= data.readUint8(10);
             var mode4Imei = tacFac.toString() + msnCd.toString();
-            if (luhn.validate(mode4Imei)) {
+            if (luhn.validate(mode4Imei) && mode4Imei.length === 15) {
                 // this could be a $MODE,4 packet, lets do some extra sanity checks to be certain
                 isMode4 = true;
                 // make a new reader
@@ -41,7 +41,7 @@ var ProtocolXPacket = /** @class */ (function () {
                 var julianSecs = mode4CheckReader.ReadUInt32();
                 var rtcTime = moment.tz('1980-01-06T00:00:00', 'UTC').add(julianSecs, 'seconds');
                 // check rtc time validity
-                isMode4 = rtcTime.isAfter(moment.utc().subtract(5, 'years')) && rtcTime.isBefore(moment.utc().add(24, 'hours'));
+                isMode4 = rtcTime.isBefore(moment.utc().add(24, 'hours'));
             }
             if (isMode4) {
                 // this is a $MODE,4 packet, store imei in the packet and skip the bytes

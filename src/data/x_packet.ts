@@ -39,7 +39,7 @@ export class ProtocolXPacket
             
             let mode4Imei = tacFac.toString()+msnCd.toString();
 
-            if (luhn.validate(mode4Imei))
+            if (luhn.validate(mode4Imei) && mode4Imei.length === 15)
             {
                 // this could be a $MODE,4 packet, lets do some extra sanity checks to be certain
                 isMode4 = true;
@@ -57,7 +57,7 @@ export class ProtocolXPacket
                 let rtcTime = moment.tz('1980-01-06T00:00:00', 'UTC').add(julianSecs, 'seconds');
 
                 // check rtc time validity
-                isMode4 = rtcTime.isAfter(moment.utc().subtract(5, 'years')) && rtcTime.isBefore(moment.utc().add(24, 'hours'));
+                isMode4 = rtcTime.isBefore(moment.utc().add(24, 'hours'));
             }
 
             if (isMode4)
