@@ -162,11 +162,11 @@ var ProtocolXReport = /** @class */ (function () {
         }
         // FMS IN-JOURNEY DATA
         if ((moduleMask & x_fms_in_journey_data_1.ProtocolXFmsInJourneyData.mask) === x_fms_in_journey_data_1.ProtocolXFmsInJourneyData.mask) {
-            report.fmsInJourneyData = new x_fms_in_journey_data_1.ProtocolXFmsInJourneyData(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8() * 32, reader.ReadUInt8() * 32, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() / 10, reader.ReadUInt8() + 40, reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt32() / 2);
+            report.fmsInJourneyData = new x_fms_in_journey_data_1.ProtocolXFmsInJourneyData(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8() * 32, reader.ReadUInt8() * 32, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() / 10, reader.ReadUInt8() - 40, reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt32() / 2);
         }
         // OBD IN-JOURNEY DATA
         if ((moduleMask & x_obd_in_journey_data_1.ProtocolXObdInJourneyData.mask) === x_obd_in_journey_data_1.ProtocolXObdInJourneyData.mask) {
-            report.obdInJourneyData = new x_obd_in_journey_data_1.ProtocolXObdInJourneyData(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8() * 32, reader.ReadUInt8() * 32, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() / 10, reader.ReadUInt8() + 40, reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt16() / 10);
+            report.obdInJourneyData = new x_obd_in_journey_data_1.ProtocolXObdInJourneyData(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8() * 32, reader.ReadUInt8() * 32, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() / 10, reader.ReadUInt8() - 40, reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt16() / 10);
         }
         // OBD DTC CODES
         if ((moduleMask & x_obd_dtc_codes_1.ProtocolXObdDtcCodes.mask) === x_obd_dtc_codes_1.ProtocolXObdDtcCodes.mask) {
@@ -238,7 +238,7 @@ var ProtocolXReport = /** @class */ (function () {
         }
         // FMS IN-JOURNEY HIGH-RES
         if ((moduleMask & x_fms_in_journey_high_res_1.ProtocolXFmsInJourneyHighRes.mask) === x_fms_in_journey_high_res_1.ProtocolXFmsInJourneyHighRes.mask) {
-            report.fmsInJourneyHighRes = new x_fms_in_journey_high_res_1.ProtocolXFmsInJourneyHighRes(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8() * 32, reader.ReadUInt8() * 32, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() / 100, reader.ReadUInt8() + 40, reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt32() / 1000);
+            report.fmsInJourneyHighRes = new x_fms_in_journey_high_res_1.ProtocolXFmsInJourneyHighRes(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8() * 32, reader.ReadUInt8() * 32, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() / 100, reader.ReadUInt8() - 40, reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt32() / 1000);
         }
         // FMS DRIVER WORKING STATES
         if ((moduleMask & x_fms_driver_working_states_1.ProtocolXFmsDriverWorkingStates.mask) === x_fms_driver_working_states_1.ProtocolXFmsDriverWorkingStates.mask) {

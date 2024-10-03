@@ -1,6 +1,6 @@
 {
     "name": "astra-protocol-x-parser",
-    "version": "1.0.29",
+    "version": "1.0.30",
     "description": "A lightweight NodeJS package for parsing data from Astra Telematics IoT devices",
     "main": "lib/es5/index.js",
     "module": "lib/es6/index.js",

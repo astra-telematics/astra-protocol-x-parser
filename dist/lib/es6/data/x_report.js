@@ -159,11 +159,11 @@ var ProtocolXReport = /** @class */ (function () {
         }
         // FMS IN-JOURNEY DATA
         if ((moduleMask & ProtocolXFmsInJourneyData.mask) === ProtocolXFmsInJourneyData.mask) {
-            report.fmsInJourneyData = new ProtocolXFmsInJourneyData(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8() * 32, reader.ReadUInt8() * 32, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() / 10, reader.ReadUInt8() + 40, reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt32() / 2);
+            report.fmsInJourneyData = new ProtocolXFmsInJourneyData(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8() * 32, reader.ReadUInt8() * 32, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() / 10, reader.ReadUInt8() - 40, reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt32() / 2);
         }
         // OBD IN-JOURNEY DATA
         if ((moduleMask & ProtocolXObdInJourneyData.mask) === ProtocolXObdInJourneyData.mask) {
-            report.obdInJourneyData = new ProtocolXObdInJourneyData(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8() * 32, reader.ReadUInt8() * 32, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() / 10, reader.ReadUInt8() + 40, reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt16() / 10);
+            report.obdInJourneyData = new ProtocolXObdInJourneyData(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8() * 32, reader.ReadUInt8() * 32, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() / 10, reader.ReadUInt8() - 40, reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt16() / 10);
         }
         // OBD DTC CODES
         if ((moduleMask & ProtocolXObdDtcCodes.mask) === ProtocolXObdDtcCodes.mask) {
@@ -235,7 +235,7 @@ var ProtocolXReport = /** @class */ (function () {
         }
         // FMS IN-JOURNEY HIGH-RES
         if ((moduleMask & ProtocolXFmsInJourneyHighRes.mask) === ProtocolXFmsInJourneyHighRes.mask) {
-            report.fmsInJourneyHighRes = new ProtocolXFmsInJourneyHighRes(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8() * 32, reader.ReadUInt8() * 32, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() / 100, reader.ReadUInt8() + 40, reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt32() / 1000);
+            report.fmsInJourneyHighRes = new ProtocolXFmsInJourneyHighRes(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8() * 32, reader.ReadUInt8() * 32, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() / 100, reader.ReadUInt8() - 40, reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt32() / 1000);
         }
         // FMS DRIVER WORKING STATES
         if ((moduleMask & ProtocolXFmsDriverWorkingStates.mask) === ProtocolXFmsDriverWorkingStates.mask) {
