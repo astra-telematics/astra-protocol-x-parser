@@ -68,3 +68,4 @@ __exportStar(require("./data/modules/x_stars_acim_motor_controller_data"), expor
 __exportStar(require("./data/modules/x_torrot_muvi_battery_data"), exports);
 __exportStar(require("./data/modules/x_torrot_muvi_scooter_data"), exports);
 __exportStar(require("./data/modules/x_trailer_id"), exports);
+__exportStar(require("./x_parser_options"), exports);

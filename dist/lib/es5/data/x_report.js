@@ -238,7 +238,7 @@ var ProtocolXReport = /** @class */ (function () {
         }
         // FMS IN-JOURNEY HIGH-RES
         if ((moduleMask & x_fms_in_journey_high_res_1.ProtocolXFmsInJourneyHighRes.mask) === x_fms_in_journey_high_res_1.ProtocolXFmsInJourneyHighRes.mask) {
-            report.fmsInJourneyHighRes = new x_fms_in_journey_high_res_1.ProtocolXFmsInJourneyHighRes(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8() * 32, reader.ReadUInt8() * 32, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() / 100, reader.ReadUInt8() - 40, reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt32() / 1000);
+            report.fmsInJourneyHighRes = new x_fms_in_journey_high_res_1.ProtocolXFmsInJourneyHighRes(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8() * 32, reader.ReadUInt8() * 32, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() / 10, reader.ReadUInt8() - 40, reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt32() / 1000);
         }
         // FMS DRIVER WORKING STATES
         if ((moduleMask & x_fms_driver_working_states_1.ProtocolXFmsDriverWorkingStates.mask) === x_fms_driver_working_states_1.ProtocolXFmsDriverWorkingStates.mask) {

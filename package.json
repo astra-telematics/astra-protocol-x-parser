@@ -6,7 +6,7 @@
     "preparepackage": "rm dist/README.md && cp README.md dist/README.md"
   },
   "devDependencies": {
-    "@types/node": "^20.14.8",
+    "@types/node": "^20.17.0",
     "typescript": "^5.5.2"
   },
   "dependencies": {

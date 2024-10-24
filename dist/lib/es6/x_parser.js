@@ -1,9 +1,12 @@
 import { ProtocolXLoginData } from "./data/x_login_data";
 import { ProtocolXPacket } from "./data/x_packet";
+import { ProtocolXParserOptions } from "./x_parser_options";
 var ProtocolXParser = /** @class */ (function () {
-    function ProtocolXParser(data) {
+    function ProtocolXParser(data, options) {
+        if (options === void 0) { options = new ProtocolXParserOptions(); }
         this.isLogin = false;
         this.data = data;
+        this.options = options;
         this.parse();
     }
     ProtocolXParser.prototype.checkLogin = function () {
@@ -24,7 +27,7 @@ var ProtocolXParser = /** @class */ (function () {
             this.isLogin = true;
         }
         else {
-            this.packet = ProtocolXPacket.fromData(this.data);
+            this.packet = ProtocolXPacket.fromData(this.data, this.options.enableMode4);
         }
     };
     return ProtocolXParser;

@@ -66,7 +66,7 @@ In this case, the IMEI will be available in the ProtocolXPacket object under the
 
 ```js
 const net = require('net');
-const {ProtocolXParser} = require('astra-protocol-x-parser');
+const {ProtocolXParser, ProtocolXParserOptions} = require('astra-protocol-x-parser');
 
 let server = net.createServer((c) => {
     console.log('client connected');
@@ -84,10 +84,24 @@ let server = net.createServer((c) => {
 
         try
         {
-            let parser = new ProtocolXParser(data);
+            /*
+                Initiate a new ProtocolXParser with your received data, use the options parameter to change certain behaviour.
+            */
+            let parser = new ProtocolXParser(
+                data, 
+                new ProtocolXParserOptions(
+                    /* 
+                        enableMode4: Set this option to true to make the parser check the packet for an IMEI when using $MODE,4. 
+
+                        Enabling this is NOT RECCOMENDED. 
+                        You should use your device with $MODE,6 configuration to enable login packets instead of encoding it in the data packets.
+                    */
+                    false
+                )
+            );
 
             /* 
-                By default, devices use $MODE,6 which means they will send a login packet before sening data.
+                By default, devices use $MODE,6 which means they will send a login packet before sending data.
                 If the data received is the login packet, isLogin will be 'true' and details about the device
                 can be accessed under the parser's loginData property
             */

@@ -546,7 +546,7 @@ export class ProtocolXReport
                 reader.ReadUInt8(),
                 reader.ReadUInt8(),
                 reader.ReadUInt8(),
-                reader.ReadUInt16() / 100,
+                reader.ReadUInt16() / 10,
                 reader.ReadUInt8() - 40,
                 reader.ReadUInt16(),
                 reader.ReadUInt16(),

@@ -52,3 +52,4 @@ export * from "./data/modules/x_stars_acim_motor_controller_data";
 export * from "./data/modules/x_torrot_muvi_battery_data";
 export * from "./data/modules/x_torrot_muvi_scooter_data";
 export * from "./data/modules/x_trailer_id";
+export * from "./x_parser_options";

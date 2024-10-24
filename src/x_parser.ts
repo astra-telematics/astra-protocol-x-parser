@@ -1,18 +1,22 @@
 import { ProtocolXLoginData } from "./data/x_login_data";
 import { ProtocolXPacket } from "./data/x_packet";
+import { ProtocolXParserOptions } from "./x_parser_options";
 
 export class ProtocolXParser
 {
     private data: Buffer;
+    private options: ProtocolXParserOptions;
     public isLogin: boolean = false;
     public loginData?: ProtocolXLoginData;
     public packet?: ProtocolXPacket | null;
 
     constructor (
-        data: Buffer
+        data: Buffer,
+        options: ProtocolXParserOptions = new ProtocolXParserOptions()
     )
     {
         this.data = data;
+        this.options = options;
         this.parse();
     }
 
@@ -53,7 +57,7 @@ export class ProtocolXParser
         }
         else
         {
-            this.packet = ProtocolXPacket.fromData(this.data);
+            this.packet = ProtocolXPacket.fromData(this.data, this.options.enableMode4);
         }
     }
 }

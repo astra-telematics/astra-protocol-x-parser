@@ -4,5 +4,5 @@ export declare class ProtocolXPacket {
     private length?;
     mode4Imei?: string;
     reports: ProtocolXReport[];
-    static fromData(data: Buffer): ProtocolXPacket | null;
+    static fromData(data: Buffer, enableMode4?: boolean): ProtocolXPacket | null;
 }

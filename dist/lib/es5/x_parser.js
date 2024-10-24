@@ -3,10 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProtocolXParser = void 0;
 var x_login_data_1 = require("./data/x_login_data");
 var x_packet_1 = require("./data/x_packet");
+var x_parser_options_1 = require("./x_parser_options");
 var ProtocolXParser = /** @class */ (function () {
-    function ProtocolXParser(data) {
+    function ProtocolXParser(data, options) {
+        if (options === void 0) { options = new x_parser_options_1.ProtocolXParserOptions(); }
         this.isLogin = false;
         this.data = data;
+        this.options = options;
         this.parse();
     }
     ProtocolXParser.prototype.checkLogin = function () {
@@ -27,7 +30,7 @@ var ProtocolXParser = /** @class */ (function () {
             this.isLogin = true;
         }
         else {
-            this.packet = x_packet_1.ProtocolXPacket.fromData(this.data);
+            this.packet = x_packet_1.ProtocolXPacket.fromData(this.data, this.options.enableMode4);
         }
     };
     return ProtocolXParser;
