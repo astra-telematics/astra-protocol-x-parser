@@ -2,14 +2,17 @@ export class ProtocolXAstraGenericCanDataEntry
 {
     public id: number;
     public data: Buffer;
+    public dataAgeS: number;
 
     constructor (
         id: number,
-        data: Buffer
+        data: Buffer,
+        dataAgeS: number
     )
     {
         this.id = id;
         this.data = data;
+        this.dataAgeS = dataAgeS;
     }
 }
 

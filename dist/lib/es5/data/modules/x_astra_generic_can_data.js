@@ -2,9 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProtocolXAstraGenericCanData = exports.ProtocolXAstraGenericCanDataEntry = void 0;
 var ProtocolXAstraGenericCanDataEntry = /** @class */ (function () {
-    function ProtocolXAstraGenericCanDataEntry(id, data) {
+    function ProtocolXAstraGenericCanDataEntry(id, data, dataAgeS) {
         this.id = id;
         this.data = data;
+        this.dataAgeS = dataAgeS;
     }
     return ProtocolXAstraGenericCanDataEntry;
 }());

@@ -266,10 +266,16 @@ var ProtocolXReport = /** @class */ (function () {
                         case x_sensors_1.ProtocolXSensorType.HUMIDITY:
                             sensor.humidityPercent = reader.ReadUInt16() / 100;
                             break;
+                        default:
+                            reader.ReadBytes(2);
+                            break;
                     }
                     if (!report.sensors.sensors)
                         report.sensors.sensors = [];
                     report.sensors.sensors.push(sensor);
+                }
+                else {
+                    reader.ReadBytes(2);
                 }
             }
         }
@@ -340,14 +346,16 @@ var ProtocolXReport = /** @class */ (function () {
         }
         // ASTRA GENERIC CAN DATA
         if ((moduleMask & x_astra_generic_can_data_1.ProtocolXAstraGenericCanData.mask) === x_astra_generic_can_data_1.ProtocolXAstraGenericCanData.mask) {
-            var byteCount = reader.ReadUInt16() - 2;
-            if (byteCount >= 12 && (byteCount % 12) === 0) {
+            var byteCount = reader.ReadUInt16() - 6;
+            if (byteCount >= 13 && (byteCount % 13) === 0) {
                 report.astraGenericCanData = new x_astra_generic_can_data_1.ProtocolXAstraGenericCanData();
-                var entryCount = byteCount / 12;
+                // skip reserved
+                reader.ReadBytes(4);
+                var entryCount = byteCount / 13;
                 for (var i = 0; i < entryCount; i++) {
                     if (!report.astraGenericCanData.entries)
                         report.astraGenericCanData.entries = [];
-                    report.astraGenericCanData.entries.push(new x_astra_generic_can_data_1.ProtocolXAstraGenericCanDataEntry(reader.ReadUInt32(), reader.ReadBytes(8)));
+                    report.astraGenericCanData.entries.push(new x_astra_generic_can_data_1.ProtocolXAstraGenericCanDataEntry(reader.ReadUInt32(), reader.ReadBytes(8), reader.ReadUInt8()));
                 }
             }
             else if (byteCount > 0) {

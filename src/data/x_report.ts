@@ -610,10 +610,17 @@ export class ProtocolXReport
                         case ProtocolXSensorType.HUMIDITY:
                             sensor.humidityPercent = reader.ReadUInt16() / 100;
                             break;
+                        default:
+                            reader.ReadBytes(2);
+                            break;
                     }
 
                     if (!report.sensors.sensors) report.sensors.sensors = [];
                     report.sensors.sensors.push(sensor);
+                }
+                else
+                {
+                    reader.ReadBytes(2);
                 }
             }
         }
@@ -846,13 +853,17 @@ export class ProtocolXReport
         // ASTRA GENERIC CAN DATA
         if ((moduleMask & ProtocolXAstraGenericCanData.mask) === ProtocolXAstraGenericCanData.mask)
         {
-            let byteCount = reader.ReadUInt16() - 2;
+
+            let byteCount = reader.ReadUInt16() - 6;
             
-            if (byteCount >= 12 && (byteCount % 12) === 0)
+            if (byteCount >= 13 && (byteCount % 13) === 0)
             {
                 report.astraGenericCanData = new ProtocolXAstraGenericCanData();
 
-                let entryCount = byteCount / 12;
+                // skip reserved
+                reader.ReadBytes(4);
+
+                let entryCount = byteCount / 13;
 
                 for (let i = 0; i < entryCount; i++)
                 {
@@ -860,7 +871,8 @@ export class ProtocolXReport
                     report.astraGenericCanData.entries.push(
                         new ProtocolXAstraGenericCanDataEntry(
                             reader.ReadUInt32(),
-                            reader.ReadBytes(8)
+                            reader.ReadBytes(8),
+                            reader.ReadUInt8()
                         )
                     );
                 }

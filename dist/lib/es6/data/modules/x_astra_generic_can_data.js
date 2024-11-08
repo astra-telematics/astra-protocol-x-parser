@@ -1,7 +1,8 @@
 var ProtocolXAstraGenericCanDataEntry = /** @class */ (function () {
-    function ProtocolXAstraGenericCanDataEntry(id, data) {
+    function ProtocolXAstraGenericCanDataEntry(id, data, dataAgeS) {
         this.id = id;
         this.data = data;
+        this.dataAgeS = dataAgeS;
     }
     return ProtocolXAstraGenericCanDataEntry;
 }());
