@@ -30,7 +30,7 @@ var ProtocolXPacket = /** @class */ (function () {
                 msnCd |= data.readUint8(9);
                 msnCd <<= 8;
                 msnCd |= data.readUint8(10);
-                var mode4Imei = tacFac.toString() + msnCd.toString();
+                var mode4Imei = tacFac.toString().padEnd(8, '0') + msnCd.toString().padStart(7, '0');
                 if (luhn.validate(mode4Imei) && mode4Imei.length === 15) {
                     // this could be a $MODE,4 packet, lets do some extra sanity checks to be certain
                     isMode4 = true;

@@ -39,7 +39,7 @@ export class ProtocolXPacket
                 msnCd <<= 8;
                 msnCd |= data.readUint8(10);
                 
-                let mode4Imei = tacFac.toString()+msnCd.toString();
+                let mode4Imei = tacFac.toString().padEnd(8, '0')+msnCd.toString().padStart(7, '0');
     
                 if (luhn.validate(mode4Imei) && mode4Imei.length === 15)
                 {
