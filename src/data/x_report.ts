@@ -60,6 +60,11 @@ export class ProtocolXReport
     public reasons: ProtocolXReason[] = [];
     public statusFlags?: number;
     public status?: ProtocolXReportStatus;
+    public rawModuleMask: bigint;
+    public rawRtcTime: number;
+    public rawReasonFlags: number;
+    public rawStatusFlags: number;
+    public rawGpsTimeDateLastKnownGood: number;
 
     public devicePower?: ProtocolXDevicePower;
     public gpsData?: ProtocolXGpsData;
@@ -123,11 +128,14 @@ export class ProtocolXReport
             moduleMask |= BigInt(reader.ReadUInt8());
             if (i !== 5) moduleMask <<= BigInt(8);
         }
+        report.rawModuleMask = moduleMask;
 
         let julianSecs = reader.ReadUInt32();
+        report.rawRtcTime = julianSecs;
         report.timestamp = moment.tz('1980-01-06T00:00:00', 'UTC').add(julianSecs, 'seconds');
 
         let reasonFlags = reader.ReadUInt32();
+        report.rawReasonFlags = reasonFlags;
         
         for (let i = 0; i < ProtocolXReasonLabel.COUNT; i++)
         {
@@ -139,6 +147,7 @@ export class ProtocolXReport
         }
 
         report.statusFlags = reader.ReadUInt16();
+        report.rawStatusFlags = report.statusFlags;
 
         report.status = new ProtocolXReportStatus();
         report.status.ignitionState = (report.statusFlags! & 0x1) === 1;
@@ -165,7 +174,7 @@ export class ProtocolXReport
         // GPS DATA
         if ((moduleMask & ProtocolXGpsData.mask) === ProtocolXGpsData.mask)
         {
-            reader.ReadBytes(4);
+            report.rawGpsTimeDateLastKnownGood = reader.ReadUInt32();
             report.gpsData = new ProtocolXGpsData(
                 reader.ReadInt32() / 1000000,
                 reader.ReadInt32() / 1000000,

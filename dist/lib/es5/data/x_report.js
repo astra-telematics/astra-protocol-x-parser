@@ -68,9 +68,12 @@ var ProtocolXReport = /** @class */ (function () {
             if (i !== 5)
                 moduleMask <<= BigInt(8);
         }
+        report.rawModuleMask = moduleMask;
         var julianSecs = reader.ReadUInt32();
+        report.rawRtcTime = julianSecs;
         report.timestamp = moment.tz('1980-01-06T00:00:00', 'UTC').add(julianSecs, 'seconds');
         var reasonFlags = reader.ReadUInt32();
+        report.rawReasonFlags = reasonFlags;
         for (var i = 0; i < x_reason_labels_1.ProtocolXReasonLabel.COUNT; i++) {
             var mask = 1 << i;
             if ((reasonFlags & mask) === mask) {
@@ -78,6 +81,7 @@ var ProtocolXReport = /** @class */ (function () {
             }
         }
         report.statusFlags = reader.ReadUInt16();
+        report.rawStatusFlags = report.statusFlags;
         report.status = new x_report_status_1.ProtocolXReportStatus();
         report.status.ignitionState = (report.statusFlags & 0x1) === 1;
         report.status.businessMode = (report.statusFlags & 0x2) === 0;
@@ -96,7 +100,7 @@ var ProtocolXReport = /** @class */ (function () {
         }
         // GPS DATA
         if ((moduleMask & x_gps_data_1.ProtocolXGpsData.mask) === x_gps_data_1.ProtocolXGpsData.mask) {
-            reader.ReadBytes(4);
+            report.rawGpsTimeDateLastKnownGood = reader.ReadUInt32();
             report.gpsData = new x_gps_data_1.ProtocolXGpsData(reader.ReadInt32() / 1000000, reader.ReadInt32() / 1000000, reader.ReadUInt8() * 2, reader.ReadUInt8() * 2, reader.ReadUInt8() * 2, reader.ReadUInt8() * 20, reader.ReadUInt16() / 10);
         }
         // DIGITALS

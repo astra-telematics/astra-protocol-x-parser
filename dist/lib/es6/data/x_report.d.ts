@@ -54,6 +54,11 @@ export declare class ProtocolXReport {
     reasons: ProtocolXReason[];
     statusFlags?: number;
     status?: ProtocolXReportStatus;
+    rawModuleMask: bigint;
+    rawRtcTime: number;
+    rawReasonFlags: number;
+    rawStatusFlags: number;
+    rawGpsTimeDateLastKnownGood: number;
     devicePower?: ProtocolXDevicePower;
     gpsData?: ProtocolXGpsData;
     digitals?: ProtocolXDigitals;
