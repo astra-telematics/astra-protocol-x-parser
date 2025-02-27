@@ -2,7 +2,7 @@ export class ProtocolXGnssExtendedData
 {
     static mask: bigint = BigInt(1) << BigInt(43);
 
-    public lastKnownGoddTimeDateJulianSecs: number;
+    public lastKnownGoodTimeDateJulianSecs: number;
     public latitude: number;
     public longitude: number;
     public speedKmh: number;
@@ -36,7 +36,7 @@ export class ProtocolXGnssExtendedData
         reserved: Buffer
     )
     {
-       this.lastKnownGoddTimeDateJulianSecs = lastKnownGoddTimeDateJulianSecs;
+       this.lastKnownGoodTimeDateJulianSecs = lastKnownGoddTimeDateJulianSecs;
        this.latitude = latitude;
        this.longitude = longitude;
        this.speedKmh = speedKmh;
