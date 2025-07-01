@@ -290,7 +290,7 @@ var ProtocolXReport = /** @class */ (function () {
         // SENSORS
         if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
             if ((moduleMask & ProtocolZModule33.mask) === ProtocolZModule33.mask) {
-                report.zMod33 = new ProtocolZModule33(reader.ReadUInt8(), reader.ReadInt8(), reader.ReadInt8(), reader.ReadInt16(), reader.ReadInt16(), reader.ReadUInt32(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadInt16(), reader.ReadInt16(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadInt8(), reader.ReadUInt8(), reader.ReadUInt32(), reader.ReadUInt64(), reader.ReadUInt8());
+                report.zMod33 = new ProtocolZModule33(reader.ReadUInt8(), reader.ReadInt8(), reader.ReadInt8(), reader.ReadInt16(), reader.ReadInt16(), reader.ReadUInt32(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadInt16(), reader.ReadInt16(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadInt8(), reader.ReadUInt8(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt8());
             }
         }
         else if ((moduleMask & ProtocolXSensors.mask) === ProtocolXSensors.mask) {

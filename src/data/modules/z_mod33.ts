@@ -21,7 +21,7 @@ export class ProtocolZModule33
     public i8_3: number;
     public u8_6: number;
     public u32_6: number;
-    public u64_1: bigint;
+    public u32_7: number;
     public u8_7: number;
 
     constructor (
@@ -44,7 +44,7 @@ export class ProtocolZModule33
         i8_3: number,
         u8_6: number,
         u32_6: number,
-        u64_1: bigint,
+        u32_7: number,
         u8_7: number
     )
     {
@@ -67,7 +67,7 @@ export class ProtocolZModule33
         this.i8_3 = i8_3;
         this.u8_6 = u8_6;
         this.u32_6 = u32_6;
-        this.u64_1 = u64_1;
+        this.u32_7 = u32_7;
         this.u8_7 = u8_7;
     }
 }

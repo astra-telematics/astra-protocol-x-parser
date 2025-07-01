@@ -689,7 +689,7 @@ export class ProtocolXReport
                     reader.ReadInt8(),
                     reader.ReadUInt8(),
                     reader.ReadUInt32(),
-                    reader.ReadUInt64(),
+                    reader.ReadUInt32(),
                     reader.ReadUInt8()
                 )
             }
