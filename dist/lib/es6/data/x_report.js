@@ -271,12 +271,17 @@ var ProtocolXReport = /** @class */ (function () {
         }
         // FMS DRIVER WORKING STATES
         if ((moduleMask & ProtocolXFmsDriverWorkingStates.mask) === ProtocolXFmsDriverWorkingStates.mask) {
-            report.fmsDriverWorkingStates = new ProtocolXFmsDriverWorkingStates(reader.ReadUInt32(), reader.ReadUInt8());
+            if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
+                reader.ReadBytes(1);
+            }
+            else {
+                report.fmsDriverWorkingStates = new ProtocolXFmsDriverWorkingStates(reader.ReadUInt32(), reader.ReadUInt8());
+            }
         }
         // SEGWAY NINEBOT ES4 SHARING
         if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
             if ((moduleMask & ProtocolZModule32.mask) === ProtocolZModule32.mask) {
-                report.zMod32 = new ProtocolZModule32(reader.ReadUInt8(), reader.ReadInt8(), reader.ReadUInt16() / 10, reader.ReadInt16() / 10, readU24(reader), reader.ReadUInt16(), reader.ReadInt16(), reader.ReadInt8(), reader.ReadUint32(), reader.ReadUint32(), reader.ReadUint16(), reader.ReadUint8());
+                report.zMod32 = new ProtocolZModule32(reader.ReadUInt8(), reader.ReadInt8(), reader.ReadUInt16() / 10, reader.ReadInt16() / 10, readU24(reader), reader.ReadUInt16(), reader.ReadInt16(), reader.ReadInt8(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt16(), reader.ReadUInt8());
             }
         }
         else if ((moduleMask & ProtocolXSegwayNinebotEs4Sharing.mask) === ProtocolXSegwayNinebotEs4Sharing.mask) {

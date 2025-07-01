@@ -612,10 +612,17 @@ export class ProtocolXReport
         // FMS DRIVER WORKING STATES
         if ((moduleMask & ProtocolXFmsDriverWorkingStates.mask) === ProtocolXFmsDriverWorkingStates.mask)
         {
-            report.fmsDriverWorkingStates = new ProtocolXFmsDriverWorkingStates(
-                reader.ReadUInt32(),
-                reader.ReadUInt8()
-            )
+            if (loginData?.protocolId === 'Z')
+            {
+                reader.ReadBytes(1);
+            }
+            else
+            {
+                report.fmsDriverWorkingStates = new ProtocolXFmsDriverWorkingStates(
+                    reader.ReadUInt32(),
+                    reader.ReadUInt8()
+                )
+            }
         }
 
         // SEGWAY NINEBOT ES4 SHARING
@@ -632,10 +639,10 @@ export class ProtocolXReport
                     reader.ReadUInt16(),
                     reader.ReadInt16(),
                     reader.ReadInt8(),
-                    reader.ReadUint32(),
-                    reader.ReadUint32(),
-                    reader.ReadUint16(),
-                    reader.ReadUint8()
+                    reader.ReadUInt32(),
+                    reader.ReadUInt32(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt8()
                 );
             }
         }

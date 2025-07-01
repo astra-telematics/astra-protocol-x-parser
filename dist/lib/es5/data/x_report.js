@@ -274,12 +274,17 @@ var ProtocolXReport = /** @class */ (function () {
         }
         // FMS DRIVER WORKING STATES
         if ((moduleMask & x_fms_driver_working_states_1.ProtocolXFmsDriverWorkingStates.mask) === x_fms_driver_working_states_1.ProtocolXFmsDriverWorkingStates.mask) {
-            report.fmsDriverWorkingStates = new x_fms_driver_working_states_1.ProtocolXFmsDriverWorkingStates(reader.ReadUInt32(), reader.ReadUInt8());
+            if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
+                reader.ReadBytes(1);
+            }
+            else {
+                report.fmsDriverWorkingStates = new x_fms_driver_working_states_1.ProtocolXFmsDriverWorkingStates(reader.ReadUInt32(), reader.ReadUInt8());
+            }
         }
         // SEGWAY NINEBOT ES4 SHARING
         if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
             if ((moduleMask & z_mod32_1.ProtocolZModule32.mask) === z_mod32_1.ProtocolZModule32.mask) {
-                report.zMod32 = new z_mod32_1.ProtocolZModule32(reader.ReadUInt8(), reader.ReadInt8(), reader.ReadUInt16() / 10, reader.ReadInt16() / 10, (0, utils_1.readU24)(reader), reader.ReadUInt16(), reader.ReadInt16(), reader.ReadInt8(), reader.ReadUint32(), reader.ReadUint32(), reader.ReadUint16(), reader.ReadUint8());
+                report.zMod32 = new z_mod32_1.ProtocolZModule32(reader.ReadUInt8(), reader.ReadInt8(), reader.ReadUInt16() / 10, reader.ReadInt16() / 10, (0, utils_1.readU24)(reader), reader.ReadUInt16(), reader.ReadInt16(), reader.ReadInt8(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt16(), reader.ReadUInt8());
             }
         }
         else if ((moduleMask & x_segway_ninebot_es4_sharing_1.ProtocolXSegwayNinebotEs4Sharing.mask) === x_segway_ninebot_es4_sharing_1.ProtocolXSegwayNinebotEs4Sharing.mask) {
