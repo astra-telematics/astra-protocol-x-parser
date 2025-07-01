@@ -48,6 +48,15 @@ import { ProtocolXTrailerId } from "./modules/x_trailer_id";
 import { ProtocolXReason } from "./x_reason";
 import { ProtocolXReportStatus } from "./x_report_status";
 import { ProtocolXHeinzmannData } from "./modules/x_heinzmann";
+import { ProtocolZModule32 } from "./modules/z_mod32";
+import { ProtocolZModule33 } from "./modules/z_mod33";
+import { ProtocolZModule34 } from "./modules/z_mod34";
+import { ProtocolZModule35 } from "./modules/z_mod35";
+import { ProtocolZModule36 } from "./modules/z_mod36";
+import { ProtocolZModule37 } from "./modules/z_mod37";
+import { ProtocolZModule38 } from "./modules/z_mod38";
+import { ProtocolZModule39 } from "./modules/z_mod39";
+import { ProtocolXLoginData } from "./x_login_data";
 export declare class ProtocolXReport {
     timestamp?: moment.Moment;
     sequenceNumber?: number;
@@ -106,6 +115,14 @@ export declare class ProtocolXReport {
     astraGenericCanData?: ProtocolXAstraGenericCanData;
     heinzmannData?: ProtocolXHeinzmannData;
     astraGenericDebugData?: ProtocolXAstraGenericDebugData;
+    zMod32?: ProtocolZModule32;
+    zMod33?: ProtocolZModule33;
+    zMod34?: ProtocolZModule34;
+    zMod35?: ProtocolZModule35;
+    zMod36?: ProtocolZModule36;
+    zMod37?: ProtocolZModule37;
+    zMod38?: ProtocolZModule38;
+    zMod39?: ProtocolZModule39;
     constructor();
-    static fromReader(reader: any): ProtocolXReport;
+    static fromReader(reader: any, loginData?: ProtocolXLoginData): ProtocolXReport;
 }

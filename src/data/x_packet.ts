@@ -2,6 +2,7 @@ import * as moment from "moment";
 import { astraCrc } from "../crc";
 import { ProtocolXReport } from "./x_report";
 import * as luhn from "luhn";
+import { ProtocolXLoginData } from "./x_login_data";
 
 const binutils = require('binutils64');
 
@@ -13,7 +14,7 @@ export class ProtocolXPacket
     public mode4Imei?: string;
     public reports: ProtocolXReport[] = [];
 
-    static fromData (data: Buffer, enableMode4:boolean = false): ProtocolXPacket | null
+    static fromData (data: Buffer, enableMode4:boolean = false, loginData?: ProtocolXLoginData): ProtocolXPacket | null
     {
         let packet = new ProtocolXPacket();
         let reader = new binutils.BinaryReader(data);
@@ -82,7 +83,7 @@ export class ProtocolXPacket
                         // parse reports
                         for (let i = 0; i < numReports; i++)
                         {
-                            packet.reports.push(ProtocolXReport.fromReader(reader));
+                            packet.reports.push(ProtocolXReport.fromReader(reader, loginData));
                         }
                         
                         return packet;

@@ -10,7 +10,7 @@ var ProtocolXPacket = /** @class */ (function () {
     function ProtocolXPacket() {
         this.reports = [];
     }
-    ProtocolXPacket.fromData = function (data, enableMode4) {
+    ProtocolXPacket.fromData = function (data, enableMode4, loginData) {
         if (enableMode4 === void 0) { enableMode4 = false; }
         var packet = new ProtocolXPacket();
         var reader = new binutils.BinaryReader(data);
@@ -62,7 +62,7 @@ var ProtocolXPacket = /** @class */ (function () {
                     if (numReports > 0) {
                         // parse reports
                         for (var i = 0; i < numReports; i++) {
-                            packet.reports.push(x_report_1.ProtocolXReport.fromReader(reader));
+                            packet.reports.push(x_report_1.ProtocolXReport.fromReader(reader, loginData));
                         }
                         return packet;
                     }

@@ -6,6 +6,7 @@ export class ProtocolXLoginData
     public firmwareVersion: string;
     public hardwareRevision: string;
     public settingsChecksum?: string;
+    public protocolId?: string;
 
     constructor (
         imei: string,
@@ -13,7 +14,8 @@ export class ProtocolXLoginData
         vin: string,
         firmwareVersion: string,
         hardwareRevision: string,
-        settingsChecksum?: string
+        settingsChecksum?: string,
+        protocolId?: string
     )
     {
         this.imei = imei;
@@ -22,5 +24,6 @@ export class ProtocolXLoginData
         this.firmwareVersion = firmwareVersion;
         this.hardwareRevision = hardwareRevision;
         this.settingsChecksum = settingsChecksum;
+        this.protocolId = protocolId;
     }
 }

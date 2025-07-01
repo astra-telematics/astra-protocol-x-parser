@@ -30,7 +30,7 @@ export class ProtocolXParser
 
             if (components.length >= 7)
             {
-                if (components[5] === 'X')
+                if (components[5] === 'X' || components[5] === 'Z')
                 {
                     this.loginData = new ProtocolXLoginData(
                         components[2],
@@ -38,7 +38,8 @@ export class ProtocolXParser
                         components[3],
                         components[4],
                         components[6],
-                        components.length >= 8 ? components[7].replace('\r', '') : undefined
+                        components.length >= 8 ? components[7].replace('\r', '') : undefined,
+                        components[5]
                     );
 
                     return true;
@@ -57,7 +58,7 @@ export class ProtocolXParser
         }
         else
         {
-            this.packet = ProtocolXPacket.fromData(this.data, this.options.enableMode4);
+            this.packet = ProtocolXPacket.fromData(this.data, this.options.enableMode4, this.options.loginData);
         }
     }
 }

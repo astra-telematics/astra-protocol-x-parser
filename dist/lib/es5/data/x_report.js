@@ -55,11 +55,19 @@ var x_reason_labels_1 = require("./x_reason_labels");
 var x_report_status_1 = require("./x_report_status");
 var x_trailer_id_source_1 = require("./x_trailer_id_source");
 var x_heinzmann_1 = require("./modules/x_heinzmann");
+var z_mod32_1 = require("./modules/z_mod32");
+var z_mod33_1 = require("./modules/z_mod33");
+var z_mod34_1 = require("./modules/z_mod34");
+var z_mod35_1 = require("./modules/z_mod35");
+var z_mod36_1 = require("./modules/z_mod36");
+var z_mod37_1 = require("./modules/z_mod37");
+var z_mod38_1 = require("./modules/z_mod38");
+var z_mod39_1 = require("./modules/z_mod39");
 var ProtocolXReport = /** @class */ (function () {
     function ProtocolXReport() {
         this.reasons = [];
     }
-    ProtocolXReport.fromReader = function (reader) {
+    ProtocolXReport.fromReader = function (reader, loginData) {
         var report = new ProtocolXReport();
         report.sequenceNumber = reader.ReadUInt8();
         var moduleMask = BigInt(0);
@@ -196,7 +204,12 @@ var ProtocolXReport = /** @class */ (function () {
         }
         // CARRIER TEMPERATURE DATA
         if ((moduleMask & x_carrier_temperature_data_1.ProtocolXCarrierTemperatureData.mask) === x_carrier_temperature_data_1.ProtocolXCarrierTemperatureData.mask) {
-            report.carrierTemperatureData = new x_carrier_temperature_data_1.ProtocolXCarrierTemperatureData(reader.ReadUInt16() / 10, reader.ReadUInt16() / 10, reader.ReadUInt16() / 10, reader.ReadUInt16() / 10, reader.ReadUInt16() / 10, reader.ReadUInt16() / 10, reader.ReadUInt8() / 2, reader.ReadUInt8() / 2, reader.ReadUInt8() / 2, reader.ReadUInt8(), reader.ReadUInt16() * 2, reader.ReadUInt16() * 2, reader.ReadUInt16(), (0, utils_1.readU24)(reader));
+            if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
+                reader.ReadBytes(17);
+            }
+            else {
+                report.carrierTemperatureData = new x_carrier_temperature_data_1.ProtocolXCarrierTemperatureData(reader.ReadUInt16() / 10, reader.ReadUInt16() / 10, reader.ReadUInt16() / 10, reader.ReadUInt16() / 10, reader.ReadUInt16() / 10, reader.ReadUInt16() / 10, reader.ReadUInt8() / 2, reader.ReadUInt8() / 2, reader.ReadUInt8() / 2, reader.ReadUInt8(), reader.ReadUInt16() * 2, reader.ReadUInt16() * 2, reader.ReadUInt16(), (0, utils_1.readU24)(reader));
+            }
         }
         // ONE-WIRE TEMPERATURE PROBE
         if ((moduleMask & x_one_wire_temperature_probe_1.ProtocolXOneWireTemperatureProbe.mask) === x_one_wire_temperature_probe_1.ProtocolXOneWireTemperatureProbe.mask) {
@@ -204,13 +217,23 @@ var ProtocolXReport = /** @class */ (function () {
         }
         // CARRIER TWO-WAY ALARMS
         if ((moduleMask & x_carrier_2_way_alarms_1.ProtocolXCarrierTwoWayAlarms.mask) === x_carrier_2_way_alarms_1.ProtocolXCarrierTwoWayAlarms.mask) {
-            report.carrierTwoWayAlarms = new x_carrier_2_way_alarms_1.ProtocolXCarrierTwoWayAlarms(reader.ReadUInt8(), reader.ReadBytes(16));
+            if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
+                reader.ReadBytes(10);
+            }
+            else {
+                report.carrierTwoWayAlarms = new x_carrier_2_way_alarms_1.ProtocolXCarrierTwoWayAlarms(reader.ReadUInt8(), reader.ReadBytes(16));
+            }
         }
         // RAYVOLT E-BICYCLE
         if ((moduleMask & x_rayvolt_e_bicycle_1.ProtocolXRayvoltEBicycle.mask) === x_rayvolt_e_bicycle_1.ProtocolXRayvoltEBicycle.mask) {
-            report.rayvoltEBicycle = new x_rayvolt_e_bicycle_1.ProtocolXRayvoltEBicycle(reader.ReadUInt32(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt8() / 4, reader.ReadInt8(), reader.ReadUInt8() / 2, reader.ReadUInt16());
-            // skip reserved bytes
-            reader.ReadBytes(2);
+            if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
+                reader.ReadBytes(19);
+            }
+            else {
+                report.rayvoltEBicycle = new x_rayvolt_e_bicycle_1.ProtocolXRayvoltEBicycle(reader.ReadUInt32(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt8() / 4, reader.ReadInt8(), reader.ReadUInt8() / 2, reader.ReadUInt16());
+                // skip reserved bytes
+                reader.ReadBytes(2);
+            }
         }
         // ECON 3-BYTE
         if ((moduleMask & x_econ_3_byte_1.ProtocolXEcon3Byte.mask) === x_econ_3_byte_1.ProtocolXEcon3Byte.mask) {
@@ -226,7 +249,12 @@ var ProtocolXReport = /** @class */ (function () {
         }
         // NMEA 2000 DATA
         if ((moduleMask & x_nmea_2000_data_1.ProtocolXNmea2000Data.mask) === x_nmea_2000_data_1.ProtocolXNmea2000Data.mask) {
-            report.nmea2000Data = new x_nmea_2000_data_1.ProtocolXNmea2000Data(reader.ReadInt16() * 0.004, reader.ReadInt16() * 0.004, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16() * 10, reader.ReadUInt16(), reader.ReadUInt32(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt32() * 0.01, reader.ReadUInt16() * 0.001, reader.ReadUInt16() * 0.01, reader.ReadUInt16() * 0.01, reader.ReadBytes(16));
+            if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
+                reader.ReadBytes(6);
+            }
+            else {
+                report.nmea2000Data = new x_nmea_2000_data_1.ProtocolXNmea2000Data(reader.ReadInt16() * 0.004, reader.ReadInt16() * 0.004, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16() * 10, reader.ReadUInt16(), reader.ReadUInt32(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt32() * 0.01, reader.ReadUInt16() * 0.001, reader.ReadUInt16() * 0.01, reader.ReadUInt16() * 0.01, reader.ReadBytes(16));
+            }
         }
         // SIM SUBSCRIBER ID
         if ((moduleMask & x_sim_subscriber_id_1.ProtocolXSimSubscriberId.mask) === x_sim_subscriber_id_1.ProtocolXSimSubscriberId.mask) {
@@ -249,11 +277,21 @@ var ProtocolXReport = /** @class */ (function () {
             report.fmsDriverWorkingStates = new x_fms_driver_working_states_1.ProtocolXFmsDriverWorkingStates(reader.ReadUInt32(), reader.ReadUInt8());
         }
         // SEGWAY NINEBOT ES4 SHARING
-        if ((moduleMask & x_segway_ninebot_es4_sharing_1.ProtocolXSegwayNinebotEs4Sharing.mask) === x_segway_ninebot_es4_sharing_1.ProtocolXSegwayNinebotEs4Sharing.mask) {
+        if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
+            if ((moduleMask & z_mod32_1.ProtocolZModule32.mask) === z_mod32_1.ProtocolZModule32.mask) {
+                report.zMod32 = new z_mod32_1.ProtocolZModule32(reader.ReadUInt8(), reader.ReadInt8(), reader.ReadUInt16() / 10, reader.ReadInt16() / 10, (0, utils_1.readU24)(reader), reader.ReadUInt16(), reader.ReadInt16(), reader.ReadInt8(), reader.ReadUint32(), reader.ReadUint32(), reader.ReadUint16(), reader.ReadUint8());
+            }
+        }
+        else if ((moduleMask & x_segway_ninebot_es4_sharing_1.ProtocolXSegwayNinebotEs4Sharing.mask) === x_segway_ninebot_es4_sharing_1.ProtocolXSegwayNinebotEs4Sharing.mask) {
             report.segwayNinebotEs4Sharing = new x_segway_ninebot_es4_sharing_1.ProtocolXSegwayNinebotEs4Sharing(reader.ReadUInt8() / 10, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8());
         }
         // SENSORS
-        if ((moduleMask & x_sensors_1.ProtocolXSensors.mask) === x_sensors_1.ProtocolXSensors.mask) {
+        if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
+            if ((moduleMask & z_mod33_1.ProtocolZModule33.mask) === z_mod33_1.ProtocolZModule33.mask) {
+                report.zMod33 = new z_mod33_1.ProtocolZModule33(reader.ReadUInt8(), reader.ReadInt8(), reader.ReadInt8(), reader.ReadInt16(), reader.ReadInt16(), reader.ReadUInt32(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadInt16(), reader.ReadInt16(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadInt8(), reader.ReadUInt8(), reader.ReadUInt32(), reader.ReadUInt64(), reader.ReadUInt8());
+            }
+        }
+        else if ((moduleMask & x_sensors_1.ProtocolXSensors.mask) === x_sensors_1.ProtocolXSensors.mask) {
             report.sensors = new x_sensors_1.ProtocolXSensors();
             for (var i = 0; i < 6; i++) {
                 var b1 = reader.ReadUInt8();
@@ -284,27 +322,52 @@ var ProtocolXReport = /** @class */ (function () {
             }
         }
         // GOING GREEN "THE CORE" BIKE DATA
-        if ((moduleMask & x_going_green_the_core_bike_data_1.ProtocolXGoingGreenTheCoreBikeData.mask) === x_going_green_the_core_bike_data_1.ProtocolXGoingGreenTheCoreBikeData.mask) {
+        if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
+            if ((moduleMask & z_mod34_1.ProtocolZModule34.mask) === z_mod34_1.ProtocolZModule34.mask) {
+                report.zMod34 = new z_mod34_1.ProtocolZModule34(reader.ReadBytes(38));
+            }
+        }
+        else if ((moduleMask & x_going_green_the_core_bike_data_1.ProtocolXGoingGreenTheCoreBikeData.mask) === x_going_green_the_core_bike_data_1.ProtocolXGoingGreenTheCoreBikeData.mask) {
             report.goingGreenTheCoreBikeData = new x_going_green_the_core_bike_data_1.ProtocolXGoingGreenTheCoreBikeData(reader.ReadUInt16() * 0.0015);
         }
         // ECOOTER E1/E2 SCOOTER DATA
-        if ((moduleMask & x_ecooter_scooter_data_1.ProtocolXEcooterScooterData.mask) === x_ecooter_scooter_data_1.ProtocolXEcooterScooterData.mask) {
+        if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
+            if ((moduleMask & z_mod35_1.ProtocolZModule35.mask) === z_mod35_1.ProtocolZModule35.mask) {
+                report.zMod35 = new z_mod35_1.ProtocolZModule35(reader.ReadBytes(17).toString('ascii'), reader.ReadBytes(12), reader.ReadBytes(20), reader.ReadBytes(4), reader.ReadBytes(12), reader.ReadBytes(20), reader.ReadBytes(8).toString('ascii'), reader.ReadBytes(10).toString('ascii'), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8());
+            }
+        }
+        else if ((moduleMask & x_ecooter_scooter_data_1.ProtocolXEcooterScooterData.mask) === x_ecooter_scooter_data_1.ProtocolXEcooterScooterData.mask) {
             report.ecooterScooterData = new x_ecooter_scooter_data_1.ProtocolXEcooterScooterData(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadInt8(), reader.ReadInt8(), reader.ReadInt16() * 10, reader.ReadUInt8());
             // skip reserved bytes
             reader.ReadBytes(2);
         }
         // TORROT MUVI SCOOTER DATA
-        if ((moduleMask & x_torrot_muvi_scooter_data_1.ProtocolXTorrotMuviScooterData.mask) === x_torrot_muvi_scooter_data_1.ProtocolXTorrotMuviScooterData.mask) {
+        if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
+            if ((moduleMask & z_mod36_1.ProtocolZModule36.mask) === z_mod36_1.ProtocolZModule36.mask) {
+                report.zMod36 = new z_mod36_1.ProtocolZModule36(reader.ReadBytes(9));
+            }
+        }
+        else if ((moduleMask & x_torrot_muvi_scooter_data_1.ProtocolXTorrotMuviScooterData.mask) === x_torrot_muvi_scooter_data_1.ProtocolXTorrotMuviScooterData.mask) {
             report.torrotMuviScooterData = new x_torrot_muvi_scooter_data_1.ProtocolXTorrotMuviScooterData(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadInt16() / 10, reader.ReadInt16() / 10, reader.ReadInt16() / 10, reader.ReadInt16() / 10, reader.ReadUInt16() / 10, reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16() / 10, reader.ReadUInt16() / 10, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16(), reader.ReadUInt32(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8() / 0.22745, reader.ReadUInt8() / 0.3921, reader.ReadInt8(), reader.ReadInt32() * 100, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8());
             // skip reserved bytes
             reader.ReadBytes(2);
         }
         // ECOOTER SERIAL NUMBERS
-        if ((moduleMask & x_ecooter_serial_numbers_1.ProtocolXEcooterSerialNumbers.mask) === x_ecooter_serial_numbers_1.ProtocolXEcooterSerialNumbers.mask) {
+        if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
+            if ((moduleMask & z_mod37_1.ProtocolZModule37.mask) === z_mod37_1.ProtocolZModule37.mask) {
+                report.zMod37 = new z_mod37_1.ProtocolZModule37(reader.ReadInt8(), reader.ReadInt8(), reader.ReadInt8(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16());
+            }
+        }
+        else if ((moduleMask & x_ecooter_serial_numbers_1.ProtocolXEcooterSerialNumbers.mask) === x_ecooter_serial_numbers_1.ProtocolXEcooterSerialNumbers.mask) {
             report.ecooterSerialNumbers = new x_ecooter_serial_numbers_1.ProtocolXEcooterSerialNumbers(reader.ReadBytes(16).toString('ascii'), reader.ReadBytes(16).toString('ascii'));
         }
         // ASKOLL ES2 SCOOTER DATA
-        if ((moduleMask & x_askoll_es2_scooter_data_1.ProtocolXAskollEs2ScooterData.mask) === x_askoll_es2_scooter_data_1.ProtocolXAskollEs2ScooterData.mask) {
+        if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
+            if ((moduleMask & z_mod38_1.ProtocolZModule38.mask) === z_mod38_1.ProtocolZModule38.mask) {
+                report.zMod38 = new z_mod38_1.ProtocolZModule38(reader.ReadBytes(26));
+            }
+        }
+        else if ((moduleMask & x_askoll_es2_scooter_data_1.ProtocolXAskollEs2ScooterData.mask) === x_askoll_es2_scooter_data_1.ProtocolXAskollEs2ScooterData.mask) {
             var julianSecs_1 = reader.ReadUInt32();
             var timestamp = moment.utc('1980-01-06T00:00:00').add(julianSecs_1, 'seconds');
             report.askollEs2ScooterData = new x_askoll_es2_scooter_data_1.ProtocolXAskollEs2ScooterData(timestamp, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadInt8(), reader.ReadUInt16() * 100, reader.ReadUInt8() * 100, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt32() * 100, reader.ReadUInt16() * 100, reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() * 10, reader.ReadUInt16(), reader.ReadUInt8() * 0.1, reader.ReadUInt8());
@@ -312,7 +375,12 @@ var ProtocolXReport = /** @class */ (function () {
             reader.ReadBytes(2);
         }
         // CASH IN TRANSIT STATUS
-        if ((moduleMask & x_cash_in_transit_status_1.ProtocolXCashInTransitStatus.mask) === x_cash_in_transit_status_1.ProtocolXCashInTransitStatus.mask) {
+        if ((loginData === null || loginData === void 0 ? void 0 : loginData.protocolId) === 'Z') {
+            if ((moduleMask & z_mod39_1.ProtocolZModule39.mask) === z_mod39_1.ProtocolZModule39.mask) {
+                report.zMod39 = new z_mod39_1.ProtocolZModule39(reader.ReadBytes(71));
+            }
+        }
+        else if ((moduleMask & x_cash_in_transit_status_1.ProtocolXCashInTransitStatus.mask) === x_cash_in_transit_status_1.ProtocolXCashInTransitStatus.mask) {
             report.cashInTransitStatus = new x_cash_in_transit_status_1.ProtocolXCashInTransitStatus(reader.ReadUInt8(), reader.ReadBytes(5));
         }
         // TORROT MUVI BATTERY DATA

@@ -1,6 +1,6 @@
 export declare class ProtocolXGnssExtendedData {
     static mask: bigint;
-    lastKnownGoddTimeDateJulianSecs: number;
+    lastKnownGoodTimeDateJulianSecs: number;
     latitude: number;
     longitude: number;
     speedKmh: number;

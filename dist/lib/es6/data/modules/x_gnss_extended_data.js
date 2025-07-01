@@ -1,6 +1,6 @@
 var ProtocolXGnssExtendedData = /** @class */ (function () {
     function ProtocolXGnssExtendedData(lastKnownGoddTimeDateJulianSecs, latitude, longitude, speedKmh, maxSpeedSinceLastReportKmh, headingDeg, altitudeM, journeyDistanceM, validFixAvailabilityPercent, svsInView, estimatedPositionErrorM, hdop, jammerDetectHitCount, constellationsSupportedEnabled, reserved) {
-        this.lastKnownGoddTimeDateJulianSecs = lastKnownGoddTimeDateJulianSecs;
+        this.lastKnownGoodTimeDateJulianSecs = lastKnownGoddTimeDateJulianSecs;
         this.latitude = latitude;
         this.longitude = longitude;
         this.speedKmh = speedKmh;

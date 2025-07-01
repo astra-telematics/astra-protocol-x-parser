@@ -52,6 +52,15 @@ import { ProtocolXReasonLabel } from "./x_reason_labels";
 import { ProtocolXReportStatus } from "./x_report_status";
 import { ProtocolXTrailerIdSource } from "./x_trailer_id_source";
 import { ProtocolXHeinzmannData } from "./modules/x_heinzmann";
+import { ProtocolZModule32 } from "./modules/z_mod32";
+import { ProtocolZModule33 } from "./modules/z_mod33";
+import { ProtocolZModule34 } from "./modules/z_mod34";
+import { ProtocolZModule35 } from "./modules/z_mod35";
+import { ProtocolZModule36 } from "./modules/z_mod36";
+import { ProtocolZModule37 } from "./modules/z_mod37";
+import { ProtocolZModule38 } from "./modules/z_mod38";
+import { ProtocolZModule39 } from "./modules/z_mod39";
+import { ProtocolXLoginData } from "./x_login_data";
 
 export class ProtocolXReport
 {
@@ -113,10 +122,18 @@ export class ProtocolXReport
     public astraGenericCanData?: ProtocolXAstraGenericCanData;
     public heinzmannData?: ProtocolXHeinzmannData;
     public astraGenericDebugData?: ProtocolXAstraGenericDebugData;
+    public zMod32?: ProtocolZModule32
+    public zMod33?: ProtocolZModule33;
+    public zMod34?: ProtocolZModule34;
+    public zMod35?: ProtocolZModule35
+    public zMod36?: ProtocolZModule36;
+    public zMod37?: ProtocolZModule37;
+    public zMod38?: ProtocolZModule38;
+    public zMod39?: ProtocolZModule39;
     
     constructor(){}
 
-    static fromReader (reader: any): ProtocolXReport
+    static fromReader (reader: any, loginData?: ProtocolXLoginData): ProtocolXReport
     {
         let report = new ProtocolXReport();
 
@@ -396,22 +413,29 @@ export class ProtocolXReport
         // CARRIER TEMPERATURE DATA
         if ((moduleMask & ProtocolXCarrierTemperatureData.mask) === ProtocolXCarrierTemperatureData.mask)
         {
-            report.carrierTemperatureData = new ProtocolXCarrierTemperatureData(
-                reader.ReadUInt16() / 10,
-                reader.ReadUInt16() / 10,
-                reader.ReadUInt16() / 10,
-                reader.ReadUInt16() / 10,
-                reader.ReadUInt16() / 10,
-                reader.ReadUInt16() / 10,
-                reader.ReadUInt8() / 2,
-                reader.ReadUInt8() / 2,
-                reader.ReadUInt8() / 2,
-                reader.ReadUInt8(),
-                reader.ReadUInt16() * 2,
-                reader.ReadUInt16() * 2,
-                reader.ReadUInt16(),
-                readU24(reader)
-            )
+            if (loginData?.protocolId === 'Z')
+            {
+                reader.ReadBytes(17);
+            }
+            else
+            {
+                report.carrierTemperatureData = new ProtocolXCarrierTemperatureData(
+                    reader.ReadUInt16() / 10,
+                    reader.ReadUInt16() / 10,
+                    reader.ReadUInt16() / 10,
+                    reader.ReadUInt16() / 10,
+                    reader.ReadUInt16() / 10,
+                    reader.ReadUInt16() / 10,
+                    reader.ReadUInt8() / 2,
+                    reader.ReadUInt8() / 2,
+                    reader.ReadUInt8() / 2,
+                    reader.ReadUInt8(),
+                    reader.ReadUInt16() * 2,
+                    reader.ReadUInt16() * 2,
+                    reader.ReadUInt16(),
+                    readU24(reader)
+                )
+            }
         }
 
         // ONE-WIRE TEMPERATURE PROBE
@@ -428,28 +452,42 @@ export class ProtocolXReport
         // CARRIER TWO-WAY ALARMS
         if ((moduleMask & ProtocolXCarrierTwoWayAlarms.mask) === ProtocolXCarrierTwoWayAlarms.mask)
         {
-            report.carrierTwoWayAlarms = new ProtocolXCarrierTwoWayAlarms(
-                reader.ReadUInt8(),
-                reader.ReadBytes(16)
-            )
+            if (loginData?.protocolId === 'Z')
+            {
+                reader.ReadBytes(10);
+            }
+            else
+            {
+                report.carrierTwoWayAlarms = new ProtocolXCarrierTwoWayAlarms(
+                    reader.ReadUInt8(),
+                    reader.ReadBytes(16)
+                )
+            }
         }
 
         // RAYVOLT E-BICYCLE
         if ((moduleMask & ProtocolXRayvoltEBicycle.mask) === ProtocolXRayvoltEBicycle.mask)
         {
-            report.rayvoltEBicycle = new ProtocolXRayvoltEBicycle(
-                reader.ReadUInt32(),
-                reader.ReadUInt16(),
-                reader.ReadUInt16(),
-                reader.ReadUInt16(),
-                reader.ReadUInt8(),
-                reader.ReadUInt8() / 4,
-                reader.ReadInt8(),
-                reader.ReadUInt8() / 2,
-                reader.ReadUInt16()
-            )
-            // skip reserved bytes
-            reader.ReadBytes(2);
+            if (loginData?.protocolId === 'Z')
+            {
+                reader.ReadBytes(19);
+            }
+            else
+            {
+                report.rayvoltEBicycle = new ProtocolXRayvoltEBicycle(
+                    reader.ReadUInt32(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt8(),
+                    reader.ReadUInt8() / 4,
+                    reader.ReadInt8(),
+                    reader.ReadUInt8() / 2,
+                    reader.ReadUInt16()
+                )
+                // skip reserved bytes
+                reader.ReadBytes(2);
+            }
         }
 
         // ECON 3-BYTE
@@ -487,35 +525,42 @@ export class ProtocolXReport
         // NMEA 2000 DATA
         if ((moduleMask & ProtocolXNmea2000Data.mask) === ProtocolXNmea2000Data.mask)
         {
-            report.nmea2000Data = new ProtocolXNmea2000Data(
-                reader.ReadInt16() * 0.004,
-                reader.ReadInt16() * 0.004,
-                reader.ReadUInt8(),
-                reader.ReadUInt8(),
-                reader.ReadUInt16(),
-                reader.ReadUInt8(),
-                reader.ReadUInt32(),
-                reader.ReadUInt32(),
-                reader.ReadUInt32(),
-                reader.ReadUInt16(),
-                reader.ReadUInt16(),
-                reader.ReadUInt16(),
-                reader.ReadUInt16(),
-                reader.ReadUInt16() * 10,
-                reader.ReadUInt16(),
-                reader.ReadUInt32(),
-                reader.ReadUInt16(),
-                reader.ReadUInt16(),
-                reader.ReadUInt16(),
-                reader.ReadUInt16(),
-                reader.ReadUInt8(),
-                reader.ReadUInt8(),
-                reader.ReadUInt32() * 0.01,
-                reader.ReadUInt16() * 0.001,
-                reader.ReadUInt16() * 0.01,
-                reader.ReadUInt16() * 0.01,
-                reader.ReadBytes(16)
-            )
+            if (loginData?.protocolId === 'Z')
+            {
+                reader.ReadBytes(6);
+            }
+            else
+            {
+                report.nmea2000Data = new ProtocolXNmea2000Data(
+                    reader.ReadInt16() * 0.004,
+                    reader.ReadInt16() * 0.004,
+                    reader.ReadUInt8(),
+                    reader.ReadUInt8(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt8(),
+                    reader.ReadUInt32(),
+                    reader.ReadUInt32(),
+                    reader.ReadUInt32(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16() * 10,
+                    reader.ReadUInt16(),
+                    reader.ReadUInt32(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt8(),
+                    reader.ReadUInt8(),
+                    reader.ReadUInt32() * 0.01,
+                    reader.ReadUInt16() * 0.001,
+                    reader.ReadUInt16() * 0.01,
+                    reader.ReadUInt16() * 0.01,
+                    reader.ReadBytes(16)
+                )
+            }
         }
 
         // SIM SUBSCRIBER ID
@@ -574,7 +619,27 @@ export class ProtocolXReport
         }
 
         // SEGWAY NINEBOT ES4 SHARING
-        if ((moduleMask & ProtocolXSegwayNinebotEs4Sharing.mask) === ProtocolXSegwayNinebotEs4Sharing.mask)
+        if (loginData?.protocolId === 'Z')
+        {
+            if ((moduleMask & ProtocolZModule32.mask) === ProtocolZModule32.mask)
+            {
+                report.zMod32 = new ProtocolZModule32(
+                    reader.ReadUInt8(),
+                    reader.ReadInt8(),
+                    reader.ReadUInt16() / 10,
+                    reader.ReadInt16() / 10,
+                    readU24(reader),
+                    reader.ReadUInt16(),
+                    reader.ReadInt16(),
+                    reader.ReadInt8(),
+                    reader.ReadUint32(),
+                    reader.ReadUint32(),
+                    reader.ReadUint16(),
+                    reader.ReadUint8()
+                );
+            }
+        }
+        else if ((moduleMask & ProtocolXSegwayNinebotEs4Sharing.mask) === ProtocolXSegwayNinebotEs4Sharing.mask)
         {
             report.segwayNinebotEs4Sharing = new ProtocolXSegwayNinebotEs4Sharing(
                 reader.ReadUInt8() / 10,
@@ -593,7 +658,36 @@ export class ProtocolXReport
         }
 
         // SENSORS
-        if ((moduleMask & ProtocolXSensors.mask) === ProtocolXSensors.mask)
+        if (loginData?.protocolId === 'Z')
+        {
+            if ((moduleMask & ProtocolZModule33.mask) === ProtocolZModule33.mask)
+            {
+                report.zMod33 = new ProtocolZModule33(
+                    reader.ReadUInt8(),
+                    reader.ReadInt8(),
+                    reader.ReadInt8(),
+                    reader.ReadInt16(),
+                    reader.ReadInt16(),
+                    reader.ReadUInt32(),
+                    reader.ReadUInt8(),
+                    reader.ReadUInt8(),
+                    reader.ReadInt16(),
+                    reader.ReadInt16(),
+                    reader.ReadUInt8(),
+                    reader.ReadUInt8(),
+                    reader.ReadUInt32(),
+                    reader.ReadUInt32(),
+                    reader.ReadUInt32(),
+                    reader.ReadUInt32(),
+                    reader.ReadInt8(),
+                    reader.ReadUInt8(),
+                    reader.ReadUInt32(),
+                    reader.ReadUInt64(),
+                    reader.ReadUInt8()
+                )
+            }
+        }
+        else if ((moduleMask & ProtocolXSensors.mask) === ProtocolXSensors.mask)
         {
             report.sensors = new ProtocolXSensors();
 
@@ -635,7 +729,14 @@ export class ProtocolXReport
         }
 
         // GOING GREEN "THE CORE" BIKE DATA
-        if ((moduleMask & ProtocolXGoingGreenTheCoreBikeData.mask) === ProtocolXGoingGreenTheCoreBikeData.mask)
+        if (loginData?.protocolId === 'Z')
+        {
+            if ((moduleMask & ProtocolZModule34.mask) === ProtocolZModule34.mask)
+            {
+                report.zMod34 = new ProtocolZModule34(reader.ReadBytes(38));
+            }
+        }
+        else if ((moduleMask & ProtocolXGoingGreenTheCoreBikeData.mask) === ProtocolXGoingGreenTheCoreBikeData.mask)
         {
             report.goingGreenTheCoreBikeData = new ProtocolXGoingGreenTheCoreBikeData(
                 reader.ReadUInt16() * 0.0015
@@ -643,7 +744,26 @@ export class ProtocolXReport
         }
 
         // ECOOTER E1/E2 SCOOTER DATA
-        if ((moduleMask & ProtocolXEcooterScooterData.mask) === ProtocolXEcooterScooterData.mask)
+        if (loginData?.protocolId === 'Z')
+        {
+            if ((moduleMask & ProtocolZModule35.mask) === ProtocolZModule35.mask)
+            {
+                report.zMod35 = new ProtocolZModule35(
+                    reader.ReadBytes(17).toString('ascii'),
+                    reader.ReadBytes(12),
+                    reader.ReadBytes(20),
+                    reader.ReadBytes(4),
+                    reader.ReadBytes(12),
+                    reader.ReadBytes(20),
+                    reader.ReadBytes(8).toString('ascii'),
+                    reader.ReadBytes(10).toString('ascii'),
+                    reader.ReadUInt8(),
+                    reader.ReadUInt8(),
+                    reader.ReadUInt8()
+                );
+            }
+        }
+        else if ((moduleMask & ProtocolXEcooterScooterData.mask) === ProtocolXEcooterScooterData.mask)
         {
             report.ecooterScooterData = new ProtocolXEcooterScooterData(
                 reader.ReadUInt8(),
@@ -658,7 +778,14 @@ export class ProtocolXReport
         }
 
         // TORROT MUVI SCOOTER DATA
-        if ((moduleMask & ProtocolXTorrotMuviScooterData.mask) === ProtocolXTorrotMuviScooterData.mask)
+        if (loginData?.protocolId === 'Z')
+        {
+            if ((moduleMask & ProtocolZModule36.mask) === ProtocolZModule36.mask)
+            {
+                report.zMod36 = new ProtocolZModule36(reader.ReadBytes(9));
+            }
+        }
+        else if ((moduleMask & ProtocolXTorrotMuviScooterData.mask) === ProtocolXTorrotMuviScooterData.mask)
         {
             report.torrotMuviScooterData = new ProtocolXTorrotMuviScooterData(
                 reader.ReadUInt8(),
@@ -693,7 +820,32 @@ export class ProtocolXReport
         }
 
         // ECOOTER SERIAL NUMBERS
-        if ((moduleMask & ProtocolXEcooterSerialNumbers.mask) === ProtocolXEcooterSerialNumbers.mask)
+        if (loginData?.protocolId === 'Z')
+        {
+            if ((moduleMask & ProtocolZModule37.mask) === ProtocolZModule37.mask)
+            {
+                report.zMod37 = new ProtocolZModule37(
+                    reader.ReadInt8(),
+                    reader.ReadInt8(),
+                    reader.ReadInt8(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                    reader.ReadUInt16(),
+                );
+            }
+        }
+        else if ((moduleMask & ProtocolXEcooterSerialNumbers.mask) === ProtocolXEcooterSerialNumbers.mask)
         {
             report.ecooterSerialNumbers = new ProtocolXEcooterSerialNumbers(
                 reader.ReadBytes(16).toString('ascii'),
@@ -702,7 +854,16 @@ export class ProtocolXReport
         }
 
         // ASKOLL ES2 SCOOTER DATA
-        if ((moduleMask & ProtocolXAskollEs2ScooterData.mask) === ProtocolXAskollEs2ScooterData.mask)
+        if (loginData?.protocolId === 'Z')
+        {
+            if ((moduleMask & ProtocolZModule38.mask) === ProtocolZModule38.mask)
+            {
+                report.zMod38 = new ProtocolZModule38(
+                    reader.ReadBytes(26)
+                )
+            }
+        }
+        else if ((moduleMask & ProtocolXAskollEs2ScooterData.mask) === ProtocolXAskollEs2ScooterData.mask)
         {
             let julianSecs = reader.ReadUInt32();
             let timestamp = moment.utc('1980-01-06T00:00:00').add(julianSecs, 'seconds');
@@ -733,7 +894,16 @@ export class ProtocolXReport
         }
 
         // CASH IN TRANSIT STATUS
-        if ((moduleMask & ProtocolXCashInTransitStatus.mask) === ProtocolXCashInTransitStatus.mask)
+        if (loginData?.protocolId === 'Z')
+        {
+            if ((moduleMask & ProtocolZModule39.mask) === ProtocolZModule39.mask)
+            {
+                report.zMod39 = new ProtocolZModule39(
+                    reader.ReadBytes(71)
+                );
+            }
+        }
+        else if ((moduleMask & ProtocolXCashInTransitStatus.mask) === ProtocolXCashInTransitStatus.mask)
         {
             report.cashInTransitStatus = new ProtocolXCashInTransitStatus(
                 reader.ReadUInt8(),
