@@ -12,7 +12,6 @@ var x_car2_data_1 = require("./modules/x_car2_data");
 var x_carrier_2_way_alarms_1 = require("./modules/x_carrier_2_way_alarms");
 var x_carrier_temperature_data_1 = require("./modules/x_carrier_temperature_data");
 var x_cash_in_transit_status_1 = require("./modules/x_cash_in_transit_status");
-var x_cm2010_mobility_scooter_controller_1 = require("./modules/x_cm2010_mobility_scooter_controller");
 var x_device_power_1 = require("./modules/x_device_power");
 var x_digitals_1 = require("./modules/x_digitals");
 var x_driver_behaviour_1 = require("./modules/x_driver_behaviour");
@@ -31,7 +30,6 @@ var x_gnss_extended_data_1 = require("./modules/x_gnss_extended_data");
 var x_gnss_stop_report_data_1 = require("./modules/x_gnss_stop_report_data");
 var x_going_green_the_core_bike_data_1 = require("./modules/x_going_green_the_core_bike_data");
 var x_gps_data_1 = require("./modules/x_gps_data");
-var x_gritter_data_bs_en_15430_1 = require("./modules/x_gritter_data_bs_en_15430");
 var x_gsm_network_info_1 = require("./modules/x_gsm_network_info");
 var x_nmea_2000_data_1 = require("./modules/x_nmea_2000_data");
 var x_obd_dtc_codes_1 = require("./modules/x_obd_dtc_codes");
@@ -63,6 +61,9 @@ var z_mod36_1 = require("./modules/z_mod36");
 var z_mod37_1 = require("./modules/z_mod37");
 var z_mod38_1 = require("./modules/z_mod38");
 var z_mod39_1 = require("./modules/z_mod39");
+var x_beacons_1 = require("./modules/x_beacons");
+var x_gritter_data_bs_en_15430_1 = require("./modules/x_gritter_data_bs_en_15430");
+var binutils = require('binutils64');
 var ProtocolXReport = /** @class */ (function () {
     function ProtocolXReport() {
         this.reasons = [];
@@ -417,9 +418,49 @@ var ProtocolXReport = /** @class */ (function () {
         if ((moduleMask & x_gnss_extended_data_1.ProtocolXGnssExtendedData.mask) === x_gnss_extended_data_1.ProtocolXGnssExtendedData.mask) {
             report.gnssExtendedData = new x_gnss_extended_data_1.ProtocolXGnssExtendedData(reader.ReadUInt32(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadUInt8() * 2, reader.ReadUInt8() * 2, reader.ReadUInt8() * 2, reader.ReadUInt8() * 20, reader.ReadUInt16() * 100, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt8() * 0.1, reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadBytes(4));
         }
-        // CM2010 MOBILITY SCOOTER CONTROLLER
-        if ((moduleMask & x_cm2010_mobility_scooter_controller_1.ProtocolXCm2010MobilityScooterController.mask) === x_cm2010_mobility_scooter_controller_1.ProtocolXCm2010MobilityScooterController.mask) {
-            report.cm2010MobilityScooterController = new x_cm2010_mobility_scooter_controller_1.ProtocolXCm2010MobilityScooterController(reader.ReadUInt8(), reader.ReadUInt8(), reader.ReadUInt16() / 100, reader.ReadUInt16() / 100, reader.ReadUInt16(), reader.ReadUInt8(), reader.ReadBytes(2));
+        // BEACONS (formerly CM2010 MOBILITY SCOOTER CONTROLLER)
+        if ((moduleMask & x_beacons_1.ProtocolXBeacons.mask) === x_beacons_1.ProtocolXBeacons.mask) {
+            var beacons = new x_beacons_1.ProtocolXBeacons();
+            beacons.beacons = [];
+            var beaconCount = reader.ReadUInt8();
+            var beaconsBytesLength = reader.ReadUInt16();
+            // skip reserved bytes
+            reader.ReadBytes(4);
+            var beaconsBytesUsed = 0;
+            while (beaconsBytesUsed < beaconsBytesLength && beacons.beacons.length < beaconCount) {
+                if ((beaconsBytesLength - beaconsBytesUsed) < 12) {
+                    // not enough bytes available to read core beacon data
+                    break;
+                }
+                var beacon = new x_beacons_1.ProtocolXBeacon();
+                beacon.macAddress = reader.ReadBytes(6).toString('hex').toUpperCase();
+                beacon.rssi = reader.ReadInt8();
+                beacon.isCompanion = reader.ReadUInt8() === 1;
+                beacon.lastSeenS = reader.ReadUInt16();
+                beacon.type = reader.ReadUInt8();
+                var beaconMetaDataBytesLength = reader.ReadUInt8();
+                beaconsBytesUsed += 12;
+                if ((beaconsBytesLength - beaconsBytesUsed) < beaconMetaDataBytesLength) {
+                    // not enough bytes available for meta-data
+                    break;
+                }
+                var rawMetadata = reader.ReadBytes(beaconMetaDataBytesLength);
+                beaconsBytesUsed += beaconMetaDataBytesLength;
+                var metadataReader = new binutils.BinaryReader(rawMetadata);
+                switch (beacon.type) {
+                    case x_beacons_1.ProtocolXBeaconType.HEIGHT:
+                        beacon.heightCm = metadataReader.ReadUInt16();
+                        break;
+                }
+                beacons.beacons.push(beacon);
+            }
+            if (beaconsBytesUsed !== beaconsBytesLength) {
+                // did not consume all of the beacon bytes, skip anything unused and treat as invalid
+                reader.ReadBytes(beaconsBytesLength - beaconsBytesUsed);
+            }
+            else {
+                report.beacons = beacons;
+            }
         }
         // ASTRA GENERIC CAN DATA
         if ((moduleMask & x_astra_generic_can_data_1.ProtocolXAstraGenericCanData.mask) === x_astra_generic_can_data_1.ProtocolXAstraGenericCanData.mask) {

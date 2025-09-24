@@ -9,7 +9,6 @@ import { ProtocolXCar2Data } from "./modules/x_car2_data";
 import { ProtocolXCarrierTwoWayAlarms } from "./modules/x_carrier_2_way_alarms";
 import { ProtocolXCarrierTemperatureData } from "./modules/x_carrier_temperature_data";
 import { ProtocolXCashInTransitStatus } from "./modules/x_cash_in_transit_status";
-import { ProtocolXCm2010MobilityScooterController } from "./modules/x_cm2010_mobility_scooter_controller";
 import { ProtocolXDevicePower } from "./modules/x_device_power";
 import { ProtocolXDigitals } from "./modules/x_digitals";
 import { ProtocolXDriverBehaviour } from "./modules/x_driver_behaviour";
@@ -28,7 +27,6 @@ import { ProtocolXGnssExtendedData } from "./modules/x_gnss_extended_data";
 import { ProtocolXGnssStopReportData } from "./modules/x_gnss_stop_report_data";
 import { ProtocolXGoingGreenTheCoreBikeData } from "./modules/x_going_green_the_core_bike_data";
 import { ProtocolXGpsData } from "./modules/x_gps_data";
-import { ProtocolXGritterDataBsEn15430 } from "./modules/x_gritter_data_bs_en_15430";
 import { ProtocolXGsmNetworkInfo } from "./modules/x_gsm_network_info";
 import { ProtocolXNmea2000Data } from "./modules/x_nmea_2000_data";
 import { ProtocolXObdDtcCodes } from "./modules/x_obd_dtc_codes";
@@ -61,6 +59,10 @@ import { ProtocolZModule37 } from "./modules/z_mod37";
 import { ProtocolZModule38 } from "./modules/z_mod38";
 import { ProtocolZModule39 } from "./modules/z_mod39";
 import { ProtocolXLoginData } from "./x_login_data";
+import { ProtocolXBeacon, ProtocolXBeacons, ProtocolXBeaconType } from "./modules/x_beacons";
+import { ProtocolXGritterDataBsEn15430 } from "./modules/x_gritter_data_bs_en_15430";
+
+const binutils = require('binutils64');
 
 export class ProtocolXReport
 {
@@ -98,6 +100,7 @@ export class ProtocolXReport
     public rayvoltEBicycle?: ProtocolXRayvoltEBicycle;
     public econ3Byte?: ProtocolXEcon3Byte;
     public gritterDataBsEn15430?: ProtocolXGritterDataBsEn15430;
+    public beacons?: ProtocolXBeacons;
     public redforgeWeight?: ProtocolXRedforgeWeight;
     public nmea2000Data?: ProtocolXNmea2000Data;
     public simSubscriberId?: ProtocolXSimSubscriberId;
@@ -118,7 +121,6 @@ export class ProtocolXReport
     public starsAcimMotorControllerData?: ProtocolXStarsAcimMotorControllerData;
     public car2Data?: ProtocolXCar2Data;
     public gnssExtendedData?: ProtocolXGnssExtendedData;
-    public cm2010MobilityScooterController?: ProtocolXCm2010MobilityScooterController;
     public astraGenericCanData?: ProtocolXAstraGenericCanData;
     public heinzmannData?: ProtocolXHeinzmannData;
     public astraGenericDebugData?: ProtocolXAstraGenericDebugData;
@@ -508,6 +510,7 @@ export class ProtocolXReport
                 reader.ReadUInt8()
             )
         }
+
 
         // REDFORGE WEIGHT
         if ((moduleMask & ProtocolXRedforgeWeight.mask) === ProtocolXRedforgeWeight.mask)
@@ -1022,18 +1025,65 @@ export class ProtocolXReport
             )
         }
 
-        // CM2010 MOBILITY SCOOTER CONTROLLER
-        if ((moduleMask & ProtocolXCm2010MobilityScooterController.mask) === ProtocolXCm2010MobilityScooterController.mask)
+        // BEACONS (formerly CM2010 MOBILITY SCOOTER CONTROLLER)
+        if ((moduleMask & ProtocolXBeacons.mask) === ProtocolXBeacons.mask)
         {
-            report.cm2010MobilityScooterController = new ProtocolXCm2010MobilityScooterController(
-                reader.ReadUInt8(),
-                reader.ReadUInt8(),
-                reader.ReadUInt16() / 100,
-                reader.ReadUInt16() / 100,
-                reader.ReadUInt16(),
-                reader.ReadUInt8(),
-                reader.ReadBytes(2)
-            )
+            const beacons = new ProtocolXBeacons();
+            beacons.beacons = [];
+            const beaconCount = reader.ReadUInt8();
+            const beaconsBytesLength = reader.ReadUInt16();
+            // skip reserved bytes
+            reader.ReadBytes(4);
+
+            let beaconsBytesUsed = 0;
+            while (beaconsBytesUsed < beaconsBytesLength && beacons.beacons.length < beaconCount)
+            {
+                if ((beaconsBytesLength - beaconsBytesUsed) < 12)
+                {
+                    // not enough bytes available to read core beacon data
+                    break;
+                }
+
+                const beacon = new ProtocolXBeacon();
+                beacon.macAddress = reader.ReadBytes(6).toString('hex').toUpperCase();
+                beacon.rssi = reader.ReadInt8();
+                beacon.isCompanion = reader.ReadUInt8() === 1;
+                beacon.lastSeenS = reader.ReadUInt16();
+                beacon.type = reader.ReadUInt8();
+                const beaconMetaDataBytesLength = reader.ReadUInt8();
+
+                beaconsBytesUsed += 12;
+
+                if ((beaconsBytesLength - beaconsBytesUsed) < beaconMetaDataBytesLength)
+                {
+                    // not enough bytes available for meta-data
+                    break;
+                }
+
+                const rawMetadata: Buffer = reader.ReadBytes(beaconMetaDataBytesLength);
+                beaconsBytesUsed += beaconMetaDataBytesLength;
+
+                const metadataReader = new binutils.BinaryReader(rawMetadata);
+
+                switch (beacon.type)
+                {
+                    case ProtocolXBeaconType.HEIGHT:
+                        beacon.heightCm = metadataReader.ReadUInt16();
+                        break;
+                }
+
+                beacons.beacons.push(beacon);
+            }
+
+            if (beaconsBytesUsed !== beaconsBytesLength)
+            {
+                // did not consume all of the beacon bytes, skip anything unused and treat as invalid
+                reader.ReadBytes(beaconsBytesLength - beaconsBytesUsed);
+            }
+            else
+            {
+                report.beacons = beacons;
+            }
         }
 
         // ASTRA GENERIC CAN DATA

@@ -27,6 +27,7 @@ This package is maintained by Astra Telematics and is currently up-to-date with 
 - [x] Rayvolt E-Bicycle
 - [x] ECON 3-Byte
 - [x] Gritter Data (BS EN 15430)
+- [x] Beacons
 - [x] Redforge Weight
 - [x] ECON "1-Gram" Gritter Data
 - [x] NMEA 2000 Data
@@ -47,7 +48,7 @@ This package is maintained by Astra Telematics and is currently up-to-date with 
 - [x] STARS ACIM Motor Controller Data
 - [x] "CAR2" Data
 - [x] GNSS Extended Data
-- [x] CM2010 Mobility Scooter Controller Data
+- [ ] CM2010 Mobility Scooter Controller Data DEPRECATED
 - [x] Astra Generic CAN Data
 - [x] Astra Generic Debug Data
 - [x] Heinzmann E-Scooter CAN Data
