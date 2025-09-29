@@ -14,7 +14,8 @@ This package is maintained by Astra Telematics and is currently up-to-date with 
 - [x] GSM Network Info
 - [x] Geofences
 - [x] Driver ID
-- [x] Trailer ID
+- [ ] Trailer ID DEPRECATED
+- [x] Driver Alcohol Test Data
 - [x] FMS Journey Start Data
 - [x] FMS In-Journey Data
 - [x] OBD In-Journey Data

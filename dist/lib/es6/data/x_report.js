@@ -43,12 +43,10 @@ import { ProtocolXSimSubscriberId } from "./modules/x_sim_subscriber_id";
 import { ProtocolXStarsAcimMotorControllerData } from "./modules/x_stars_acim_motor_controller_data";
 import { ProtocolXTorrotMuviBatteryData } from "./modules/x_torrot_muvi_battery_data";
 import { ProtocolXTorrotMuviScooterData } from "./modules/x_torrot_muvi_scooter_data";
-import { ProtocolXTrailerId } from "./modules/x_trailer_id";
 import { ProtocolXDriverIdSource } from "./x_driver_id_source";
 import { ProtocolXReason } from "./x_reason";
 import { ProtocolXReasonLabel } from "./x_reason_labels";
 import { ProtocolXReportStatus } from "./x_report_status";
-import { ProtocolXTrailerIdSource } from "./x_trailer_id_source";
 import { ProtocolXHeinzmannData } from "./modules/x_heinzmann";
 import { ProtocolZModule32 } from "./modules/z_mod32";
 import { ProtocolZModule33 } from "./modules/z_mod33";
@@ -60,6 +58,7 @@ import { ProtocolZModule38 } from "./modules/z_mod38";
 import { ProtocolZModule39 } from "./modules/z_mod39";
 import { ProtocolXBeacon, ProtocolXBeacons, ProtocolXBeaconType } from "./modules/x_beacons";
 import { ProtocolXGritterDataBsEn15430 } from "./modules/x_gritter_data_bs_en_15430";
+import { ProtocolXDriverAlcoholTestData } from "./modules/x_driver_alcohol_test_data";
 var binutils = require('binutils64');
 var ProtocolXReport = /** @class */ (function () {
     function ProtocolXReport() {
@@ -153,9 +152,12 @@ var ProtocolXReport = /** @class */ (function () {
             }
             report.driverId = new ProtocolXDriverId(src, reader.ReadBytes(8).toString('hex').toUpperCase());
         }
-        // TRAILER ID
-        if ((moduleMask & ProtocolXTrailerId.mask) === ProtocolXTrailerId.mask) {
-            report.trailerId = new ProtocolXTrailerId(reader.ReadUInt8() === 1 ? ProtocolXTrailerIdSource.HEGEMON : ProtocolXTrailerIdSource.NONE, reader.ReadBytes(10).toString('ascii'), reader.ReadUInt8());
+        // DRIVER ALCOHOL TEST DATA
+        if ((moduleMask & ProtocolXDriverAlcoholTestData.mask) === ProtocolXDriverAlcoholTestData.mask) {
+            var rawStatus = reader.ReadUInt8();
+            report.driverAlcoholTestData = new ProtocolXDriverAlcoholTestData(rawStatus, (rawStatus & 0x01) === 0x01, reader.ReadUInt16());
+            // skip reserved
+            reader.ReadBytes(5);
         }
         // FMS JOURNEY-START DATA
         if ((moduleMask & ProtocolXFmsJourneyStartData.mask) === ProtocolXFmsJourneyStartData.mask) {

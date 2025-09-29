@@ -46,12 +46,10 @@ var x_sim_subscriber_id_1 = require("./modules/x_sim_subscriber_id");
 var x_stars_acim_motor_controller_data_1 = require("./modules/x_stars_acim_motor_controller_data");
 var x_torrot_muvi_battery_data_1 = require("./modules/x_torrot_muvi_battery_data");
 var x_torrot_muvi_scooter_data_1 = require("./modules/x_torrot_muvi_scooter_data");
-var x_trailer_id_1 = require("./modules/x_trailer_id");
 var x_driver_id_source_1 = require("./x_driver_id_source");
 var x_reason_1 = require("./x_reason");
 var x_reason_labels_1 = require("./x_reason_labels");
 var x_report_status_1 = require("./x_report_status");
-var x_trailer_id_source_1 = require("./x_trailer_id_source");
 var x_heinzmann_1 = require("./modules/x_heinzmann");
 var z_mod32_1 = require("./modules/z_mod32");
 var z_mod33_1 = require("./modules/z_mod33");
@@ -63,6 +61,7 @@ var z_mod38_1 = require("./modules/z_mod38");
 var z_mod39_1 = require("./modules/z_mod39");
 var x_beacons_1 = require("./modules/x_beacons");
 var x_gritter_data_bs_en_15430_1 = require("./modules/x_gritter_data_bs_en_15430");
+var x_driver_alcohol_test_data_1 = require("./modules/x_driver_alcohol_test_data");
 var binutils = require('binutils64');
 var ProtocolXReport = /** @class */ (function () {
     function ProtocolXReport() {
@@ -156,9 +155,12 @@ var ProtocolXReport = /** @class */ (function () {
             }
             report.driverId = new x_driver_id_1.ProtocolXDriverId(src, reader.ReadBytes(8).toString('hex').toUpperCase());
         }
-        // TRAILER ID
-        if ((moduleMask & x_trailer_id_1.ProtocolXTrailerId.mask) === x_trailer_id_1.ProtocolXTrailerId.mask) {
-            report.trailerId = new x_trailer_id_1.ProtocolXTrailerId(reader.ReadUInt8() === 1 ? x_trailer_id_source_1.ProtocolXTrailerIdSource.HEGEMON : x_trailer_id_source_1.ProtocolXTrailerIdSource.NONE, reader.ReadBytes(10).toString('ascii'), reader.ReadUInt8());
+        // DRIVER ALCOHOL TEST DATA
+        if ((moduleMask & x_driver_alcohol_test_data_1.ProtocolXDriverAlcoholTestData.mask) === x_driver_alcohol_test_data_1.ProtocolXDriverAlcoholTestData.mask) {
+            var rawStatus = reader.ReadUInt8();
+            report.driverAlcoholTestData = new x_driver_alcohol_test_data_1.ProtocolXDriverAlcoholTestData(rawStatus, (rawStatus & 0x01) === 0x01, reader.ReadUInt16());
+            // skip reserved
+            reader.ReadBytes(5);
         }
         // FMS JOURNEY-START DATA
         if ((moduleMask & x_fms_journey_start_data_1.ProtocolXFmsJourneyStartData.mask) === x_fms_journey_start_data_1.ProtocolXFmsJourneyStartData.mask) {

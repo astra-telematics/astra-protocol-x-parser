@@ -42,7 +42,6 @@ import { ProtocolXSimSubscriberId } from "./modules/x_sim_subscriber_id";
 import { ProtocolXStarsAcimMotorControllerData } from "./modules/x_stars_acim_motor_controller_data";
 import { ProtocolXTorrotMuviBatteryData } from "./modules/x_torrot_muvi_battery_data";
 import { ProtocolXTorrotMuviScooterData } from "./modules/x_torrot_muvi_scooter_data";
-import { ProtocolXTrailerId } from "./modules/x_trailer_id";
 import { ProtocolXReason } from "./x_reason";
 import { ProtocolXReportStatus } from "./x_report_status";
 import { ProtocolXHeinzmannData } from "./modules/x_heinzmann";
@@ -57,6 +56,7 @@ import { ProtocolZModule39 } from "./modules/z_mod39";
 import { ProtocolXLoginData } from "./x_login_data";
 import { ProtocolXBeacons } from "./modules/x_beacons";
 import { ProtocolXGritterDataBsEn15430 } from "./modules/x_gritter_data_bs_en_15430";
+import { ProtocolXDriverAlcoholTestData } from "./modules/x_driver_alcohol_test_data";
 export declare class ProtocolXReport {
     timestamp?: moment.Moment;
     sequenceNumber?: number;
@@ -77,7 +77,7 @@ export declare class ProtocolXReport {
     gsmNetworkInfo?: ProtocolXGsmNetworkInfo;
     geofences?: ProtocolXGeofences;
     driverId?: ProtocolXDriverId;
-    trailerId?: ProtocolXTrailerId;
+    driverAlcoholTestData?: ProtocolXDriverAlcoholTestData;
     fmsJourneyStartData?: ProtocolXFmsJourneyStartData;
     gnssStopReportData?: ProtocolXGnssStopReportData;
     fmsInJourneyData?: ProtocolXFmsInJourneyData;
